@@ -38,6 +38,14 @@ class Piece
         draw(start);
     }
 
+    private float x, y;
+
+    public Piece(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
     /**
      * This method draws the piece at the desired tile
      *
@@ -82,5 +90,25 @@ class Piece
     public ImageView getImage()
     {
         return image;
+    }
+
+    public float getX()
+    {
+        return x;
+    }
+
+    public void setX(float x)
+    {
+        this.x = x;
+    }
+
+    public float getY()
+    {
+        return y;
+    }
+
+    public void setY(float y)
+    {
+        this.y = y;
     }
 }

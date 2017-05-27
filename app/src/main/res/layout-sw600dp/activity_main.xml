@@ -20,58 +20,58 @@
         <!--FIRST ROW-->
         <ImageView
             android:id="@+id/A1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/B1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_toEndOf="@+id/A1"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/C1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_toEndOf="@id/B1"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/D1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_toEndOf="@id/C1"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/E1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_toEndOf="@id/D1"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/F1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_toEndOf="@id/E1"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/G1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_toEndOf="@id/F1"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/H1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_toEndOf="@id/G1"
             android:background="@android:color/holo_red_dark"/>
 
@@ -86,64 +86,64 @@
         <!--SECOND ROW-->
         <ImageView
             android:id="@+id/A2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/A1"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/B2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/B1"
             android:layout_toEndOf="@id/A2"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/C2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/C1"
             android:layout_toEndOf="@id/B2"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/D2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/D1"
             android:layout_toEndOf="@id/C2"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/E2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/E1"
             android:layout_toEndOf="@id/D2"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/F2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/F1"
             android:layout_toEndOf="@id/E2"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/G2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/G1"
             android:layout_toEndOf="@id/F2"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/H2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/H1"
             android:layout_toEndOf="@id/G2"
             android:background="@android:color/black"/>
@@ -159,64 +159,64 @@
         <!-- THIRD ROW-->
         <ImageView
             android:id="@+id/A3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/A2"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/B3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/B2"
             android:layout_toEndOf="@id/A3"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/C3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/C2"
             android:layout_toEndOf="@id/B3"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/D3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/D2"
             android:layout_toEndOf="@id/C3"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/E3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/E2"
             android:layout_toEndOf="@id/D3"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/F3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/F2"
             android:layout_toEndOf="@id/E3"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/G3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@android:color/black"
             android:layout_below="@+id/F2"
             android:layout_toEndOf="@+id/F2" />
 
         <ImageView
             android:id="@+id/H3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/H2"
             android:layout_toEndOf="@id/G3"
             android:background="@android:color/holo_red_dark"/>
@@ -233,64 +233,64 @@
         <!--FOURTH ROW-->
         <ImageView
             android:id="@+id/A4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/A3"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/B4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/B3"
             android:layout_toEndOf="@id/A4"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/C4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/C3"
             android:layout_toEndOf="@id/B4"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/D4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/D3"
             android:layout_toEndOf="@id/C4"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/E4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/E3"
             android:layout_toEndOf="@id/D4"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/F4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/F3"
             android:layout_toEndOf="@id/E4"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/G4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/G3"
             android:layout_toEndOf="@id/F4"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/H4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/H3"
             android:layout_toEndOf="@id/G4"
             android:background="@android:color/black"/>
@@ -308,64 +308,64 @@
         <!--FIFTH ROW-->
         <ImageView
             android:id="@+id/A5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/A4"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/B5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/B4"
             android:layout_toEndOf="@id/A5"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/C5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/C4"
             android:layout_toEndOf="@id/B5"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/D5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/D4"
             android:layout_toEndOf="@id/C5"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/E5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@android:color/black"
             android:layout_below="@+id/D4"
             android:layout_toEndOf="@+id/D4" />
 
         <ImageView
             android:id="@+id/F5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/F4"
             android:layout_toEndOf="@id/E5"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/G5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/G4"
             android:layout_toEndOf="@id/F5"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/H5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/H4"
             android:layout_toEndOf="@id/G5"
             android:background="@android:color/holo_red_dark"/>
@@ -382,64 +382,64 @@
         <!--SIXTH ROW-->
         <ImageView
             android:id="@+id/A6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/A5"
             android:background="@android:color/holo_red_dark" />
 
         <ImageView
             android:id="@+id/B6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/B5"
             android:layout_toEndOf="@id/A6"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/C6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/C5"
             android:layout_toEndOf="@id/B6"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/D6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/D5"
             android:layout_toEndOf="@id/C6"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/E6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/E5"
             android:layout_toEndOf="@id/D6"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/F6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/F5"
             android:layout_toEndOf="@id/E6"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/G6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/G5"
             android:layout_toEndOf="@id/F6"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/H6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/H5"
             android:layout_toEndOf="@id/G6"
             android:background="@android:color/black"/>
@@ -459,64 +459,64 @@
         <!--SEVENTH ROW-->
         <ImageView
             android:id="@+id/A7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/A6"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/B7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/B6"
             android:layout_toEndOf="@id/A7"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/C7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/C6"
             android:layout_toEndOf="@id/B7"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/D7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/D6"
             android:layout_toEndOf="@id/C7"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/E7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/E6"
             android:layout_toEndOf="@id/D7"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/F7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/F6"
             android:layout_toEndOf="@id/E7"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/G7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/G6"
             android:layout_toEndOf="@id/F7"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/H7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/H6"
             android:layout_toEndOf="@id/G7"
             android:background="@android:color/holo_red_dark"/>
@@ -534,64 +534,64 @@
         <!--EIGHTH ROW-->
         <ImageView
             android:id="@+id/A8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/A7"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/B8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/B7"
             android:layout_toEndOf="@id/A8"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/C8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/C7"
             android:layout_toEndOf="@id/B8"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/D8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/D7"
             android:layout_toEndOf="@id/C8"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/E8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/E7"
             android:layout_toEndOf="@id/D8"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/F8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/F7"
             android:layout_toEndOf="@id/E8"
             android:background="@android:color/black"/>
 
         <ImageView
             android:id="@+id/G8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/G7"
             android:layout_toEndOf="@id/F8"
             android:background="@android:color/holo_red_dark"/>
 
         <ImageView
             android:id="@+id/H8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_below="@id/H7"
             android:layout_toEndOf="@id/G8"
             android:background="@android:color/black"/>
@@ -599,168 +599,168 @@
         <!--PLAYER PIECES-->
         <ImageView
             android:id="@+id/Player1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player9"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player10"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player11"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Player12"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/player"
             android:visibility="visible"/>
 
         <!--OPPONENT PIECES-->
         <ImageView
             android:id="@+id/Opponent1"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent4"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
         <ImageView
             android:id="@+id/Opponent5"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
         <ImageView
             android:id="@+id/Opponent6"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent7"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent8"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent9"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent10"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent11"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/Opponent12"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/opponent"
             android:visibility="visible"/>
     </RelativeLayout>
@@ -768,7 +768,7 @@
     <TextView
         android:id="@+id/winText"
         android:layout_width="250dp"
-        android:layout_height="36dp"
+        android:layout_height="45dp"
         android:text=""
         android:gravity="center"
         android:textColor="@android:color/black"
@@ -779,8 +779,6 @@
         android:id="@+id/btn"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true"
         android:text="@string/reset"
         android:visibility="visible" />
 </LinearLayout>

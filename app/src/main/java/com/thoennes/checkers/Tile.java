@@ -2,14 +2,15 @@ package com.thoennes.checkers;
 
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Alex on 12/28/16.
  *
  * Tile Class
  */
 
-public class Tile
-{
+public class Tile {
     // image of the tile
     private ImageView image;
 
@@ -25,17 +26,19 @@ public class Tile
 
     // name of the tile
     // ex. A1 or H8 or C7
-    private String name;
+    private String name = "";
 
     // boolean used to determine if the tile is taken
     // by a piece or not
     private boolean taken;
 
     // array of tiles that are next to this tile (normal moves)
-    private Tile [] neighbors;
+    private Tile[] neighbors;
+
+    public ArrayList<Tile> Neighbors = new ArrayList<>();
 
     // array of tiles this tile can jump to (jumps)
-    private Tile [] jumps;
+    private Tile[] jumps;
 
     /**
      * Default constructor for a tile
@@ -50,8 +53,7 @@ public class Tile
      * @param neighborsSize
      * @param jumpSize
      */
-    public Tile(ImageView image, int row, Piece piece, String name, boolean taken, float x, float y, int neighborsSize, int jumpSize)
-    {
+    public Tile(ImageView image, int row, Piece piece, String name, boolean taken, float x, float y, int neighborsSize, int jumpSize) {
         this.image = image;
         this.row = row;
         this.piece = piece;
@@ -59,8 +61,56 @@ public class Tile
         this.taken = taken;
         this.x = x;
         this.y = y;
-        this.neighbors = new Tile [neighborsSize];
-        this.jumps = new Tile [jumpSize];
+        this.neighbors = new Tile[neighborsSize];
+        this.jumps = new Tile[jumpSize];
+    }
+
+    private float left, top, right, bottom;
+    private int c;
+
+    /**
+     *
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
+    public Tile(float left, float top, float right, float bottom) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        super.equals(obj);
+
+        // if the object is compared with itself
+        if (obj == this)
+        {
+            return true;
+        }
+
+        // if the object isn't a tile
+        return !(obj instanceof Tile);
+    }
+
+    public float getLeft() {
+        return left;
+    }
+
+    public float getTop() {
+        return top;
+    }
+
+    public float getRight() {
+        return right;
+    }
+
+    public float getBottom() {
+        return bottom;
     }
 
     /**
@@ -162,12 +212,18 @@ public class Tile
     /**
      * adds a neighbor at the specified index in the array
      *
-     * @param location
+     * @param
      * @param tile
      */
-    public void addNeighbor(int location, Tile tile)
+    public void addNeighbor(Tile tile)//int location, Tile tile)
     {
-        neighbors[location] = tile;
+        // neighbors[location] = tile;
+        Neighbors.add(tile);
+    }
+
+    public ArrayList<Tile> getNeighbors()
+    {
+        return Neighbors;
     }
 
     /**
@@ -226,5 +282,10 @@ public class Tile
         }
 
         return false;
+    }
+
+    public String toString()
+    {
+        return name;
     }
 }

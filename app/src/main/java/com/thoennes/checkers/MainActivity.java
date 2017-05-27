@@ -3,17 +3,14 @@ package com.thoennes.checkers;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-// this is a comment
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import static com.thoennes.checkers.R.id.btn;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -70,9 +67,9 @@ public class MainActivity extends AppCompatActivity
 
     // array list of all tiles that is used to add a listener to each tile
     ArrayList<Tile> tiles = new ArrayList<>();
+    ArrayList<Piece> pieces = new ArrayList<>();
 
     ArrayList<Tile> opponentTiles = new ArrayList<>();
-
     // media player used to play a clicking sound when you move
     MediaPlayer mp;
 
@@ -105,24 +102,153 @@ public class MainActivity extends AppCompatActivity
             {"A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"}
     };
 
+    static float size = 0.0f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.layout_game_board);
+
+        Game game = Game.init(this);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        size = width/8;
+
+        generateAssests();
+
+
+        //setContentView(new GameBoard(this));
+
+        //tiles = GameBoard.tiles;
+        //pieces = GameBoard.pieces;
 
         // reference button in the layout
-        resetButton = (Button) findViewById(btn);
+        //resetButton = (Button) findViewById(btn);
 
-        mp = MediaPlayer.create(this, R.raw.move);
+        //mp = MediaPlayer.create(this, R.raw.move);
 
-        winText = (TextView) findViewById(R.id.winText);
+        //winText = (TextView) findViewById(R.id.winText);
 
-        setUp();
+        //setUp();
 
         // set up the click listeners for the tiles
-        onClick();
+        //onClick();
     }
+
+    public void setLinks()
+    {
+        Game game = Game.getGameInstance();
+
+        // take the tiles array from the game board class and store it in this tiles array so that
+        // 1) GameBoard doesn't become the class that handles all the operations
+        // 2) because the tiles array in the GameBoard class is being rewritten every time the scene
+        //    is drawn, I need to store the tiles securely where it won't change
+
+        // 0, 8, 16, 24 are the edge numbers that need to be dealt with specially
+        boolean multipleOfEighth = true;
+
+        for (int i = 0; i < 32; i ++)
+        {
+            if (i % 8 == 0)
+            {
+                multipleOfEighth = true;
+            }
+            else
+            {
+                multipleOfEighth = false;
+            }
+
+            if (multipleOfEighth)
+            {
+                if (!specialCase(i))
+                {
+                    // set the backward links
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i - 5));
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i - 4));
+
+                    // set the forward link
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i + 3));
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i + 4));
+                }
+                else
+                {
+                    // if the number is 0-3, a multiple of 8, or 7,15,23,31
+                    handleSpecialCase(i);
+                }
+            }
+            else if (!multipleOfEighth)
+            {
+                if (!specialCase(i))
+                {
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i - 4));
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i - 3));
+
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i + 4));
+                    game.getTiles().get(i).addNeighbor(game.getTiles().get(i + 5));
+                }
+                else
+                {
+                    handleSpecialCase(i);
+                }
+            }
+        }
+    }
+
+    /**
+     * Method that determines if the current
+     * tile in the checker board has special
+     * links or not.
+     *
+     * @param index
+     * @return
+     */
+    public boolean specialCase(int index)
+    {
+        // left side is divisible by 8 but right side isn't
+        return (index < 4 || index % 8 == 0 || index == 7 || index == 15 || index == 23 || index == 31);
+    }
+
+    public void handleSpecialCase(int index)
+    {
+        Game game = Game.getGameInstance();
+
+        if (index < 4) // 0, 1, 2, 3
+        {
+            if (index == 0) // 0
+            {
+                game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 4));
+            }
+            else if (index != 0) // 1, 2, 3
+            {
+                game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 3));
+                game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 4));
+            }
+        }
+        else if (index % 8 == 0) // 8, 16, 24
+        {
+            game.getTiles().get(index).addNeighbor(game.getTiles().get(index - 4));
+
+            game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 4));
+        }
+        else if (index > 27 && index < 31) // 28, 29, 30
+        {
+            game.getTiles().get(index).addNeighbor(game.getTiles().get(index - 4));
+            game.getTiles().get(index).addNeighbor(game.getTiles().get(index - 3));
+        }
+        else if (index == 31) // 31
+        {
+            game.getTiles().get(index).addNeighbor(game.getTiles().get(index - 4));
+        }
+        else // 7, 15, 23
+        {
+            game.getTiles().get(index).addNeighbor(game.getTiles().get(index - 4));
+
+            game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 4));
+        }
+    }
+
 
     /**
      * This method sets up all the
@@ -130,7 +256,7 @@ public class MainActivity extends AppCompatActivity
      * that are needed for the game to
      * run properly
      */
-    public void setUp()
+    /*public void setUp()
     {
         // assign all images to objects
         assignImages();
@@ -148,23 +274,23 @@ public class MainActivity extends AppCompatActivity
         initializeTiles();
 
         // set the connectivity of each tile
-        setNeighbors();
+//        setNeighbors();
 
         // set the jump connectivity
-        setJumps();
+//        setJumps();
 
         // add all the tiles to an array list
         addToArray();
 
         addOpponents();
-    }
+    }*/
 
     /**
      * This method handles the click listeners. To move, you click
      * the tile containing the piece you would like to move then
      * click the tile you would like to move to.
      */
-    public void onClick()
+    /*public void onClick()
     {
         resetButton.setOnClickListener(new View.OnClickListener()
         {
@@ -230,12 +356,44 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+    }*/
+
+    public void generateAssests()
+    {
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                // boundds of the tiles
+                float left = row * size;
+                float top = col * size;
+                float right = left + size;
+                float bottom = top + size;
+
+                if ((row + col) % 2 == 0)
+                {
+                    float circleX = left + size / 2;
+                    float circleY = top + size / 2;
+
+                    Game.getGameInstance().addTile(new Tile(left, top, right, bottom));
+
+                    if (col < 3)
+                    {
+                        Game.getGameInstance().addOpponent(new Piece(circleX, circleY));
+                    }
+                    else if (col > 4)
+                    {
+                        Game.getGameInstance().addPlayer(new Piece(circleX, circleY));
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Restarts the game by resetting all the variables
      */
-    public void restart()
+    /*public void restart()
     {
         nothingHappens();
 
@@ -259,14 +417,14 @@ public class MainActivity extends AppCompatActivity
                 tiles.get(i).getPiece().getImage().setVisibility(View.VISIBLE);
             }
         }
-    }
+    }*/
 
     /**
      * this method handles moving player pieces. The
      * player moves by tapping the piece they want to
      * move then the tile they want to move to
      */
-    public void handleMoves()
+    /*public void handleMoves()
     {
         // check if the piece is a king
         if (currentPiece.isKing())
@@ -306,12 +464,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         win();
-    }
+    }*/
 
     /**
      * This method handles the jumping action
      */
-    public void handleJump()
+    /*public void handleJump()
     {
         // check if the piece is a king
         if (currentPiece.isKing())
@@ -343,7 +501,7 @@ public class MainActivity extends AppCompatActivity
                 removeJumpedPiece(previousPos, newPos);
                 prepareForNextClick();
 
-                // allow the copmuter to move
+                // allow the computer to move
                 addOpponents();
                 AI();
                 addOpponents();
@@ -357,7 +515,7 @@ public class MainActivity extends AppCompatActivity
 
         // check for a win after every move
         win();
-    }
+    }*/
 
     /**
      * Finds the middle tile between the
@@ -466,7 +624,7 @@ public class MainActivity extends AppCompatActivity
      * pieces and telling the tiles which piece they
      * have,if any
      */
-    public void prepareForNextClick()
+    /*public void prepareForNextClick()
     {
         // reset clicked
         clicked = false;
@@ -497,7 +655,7 @@ public class MainActivity extends AppCompatActivity
         currentPiece = null;
 
         addOpponents();
-    }
+    }*/
 
     /**
      * This method is used to reset all the move
@@ -556,7 +714,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * This method handles all the AI movement
      */
-    public void AI()
+    /*public void AI()
     {
         // if the ai controls at least 1 piece
         if (opponentTiles.size() > 0)
@@ -617,7 +775,7 @@ public class MainActivity extends AppCompatActivity
                 resetAI();
             }
         }
-    }
+    }*/
 
     /**
      * Determines if the AI can jump
@@ -983,485 +1141,6 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < tiles.size(); i ++)
         {
             tiles.get(i).getImage().setOnClickListener(null);
-        }
-    }
-
-    /**
-     * Assign all images to all objects
-     */
-    private void assignImages()
-    {
-        playerImage1 = (ImageView) findViewById(R.id.Player1);
-        playerImage2 = (ImageView) findViewById(R.id.Player2);
-        playerImage3 = (ImageView) findViewById(R.id.Player3);
-        playerImage4 = (ImageView) findViewById(R.id.Player4);
-        playerImage5 = (ImageView) findViewById(R.id.Player5);
-        playerImage6 = (ImageView) findViewById(R.id.Player6);
-        playerImage7 = (ImageView) findViewById(R.id.Player7);
-        playerImage8 = (ImageView) findViewById(R.id.Player8);
-        playerImage9 = (ImageView) findViewById(R.id.Player9);
-        playerImage10 = (ImageView) findViewById(R.id.Player10);
-        playerImage11 = (ImageView) findViewById(R.id.Player11);
-        playerImage12 = (ImageView) findViewById(R.id.Player12);
-
-        opponentImage1 = (ImageView) findViewById(R.id.Opponent1);
-        opponentImage2 = (ImageView) findViewById(R.id.Opponent2);
-        opponentImage3 = (ImageView) findViewById(R.id.Opponent3);
-        opponentImage4 = (ImageView) findViewById(R.id.Opponent4);
-        opponentImage5 = (ImageView) findViewById(R.id.Opponent5);
-        opponentImage6 = (ImageView) findViewById(R.id.Opponent6);
-        opponentImage7 = (ImageView) findViewById(R.id.Opponent7);
-        opponentImage8 = (ImageView) findViewById(R.id.Opponent8);
-        opponentImage9 = (ImageView) findViewById(R.id.Opponent9);
-        opponentImage10 = (ImageView) findViewById(R.id.Opponent10);
-        opponentImage11 = (ImageView) findViewById(R.id.Opponent11);
-        opponentImage12 = (ImageView) findViewById(R.id.Opponent12);
-
-        A1_Image = (ImageView) findViewById(R.id.A1);
-        C1_Image = (ImageView) findViewById(R.id.C1);
-        E1_Image = (ImageView) findViewById(R.id.E1);
-        G1_Image = (ImageView) findViewById(R.id.G1);
-
-        B2_Image = (ImageView) findViewById(R.id.B2);
-        D2_Image = (ImageView) findViewById(R.id.D2);
-        F2_Image = (ImageView) findViewById(R.id.F2);
-        H2_Image = (ImageView) findViewById(R.id.H2);
-
-        A3_Image = (ImageView) findViewById(R.id.A3);
-        C3_Image = (ImageView) findViewById(R.id.C3);
-        E3_Image = (ImageView) findViewById(R.id.E3);
-        G3_Image = (ImageView) findViewById(R.id.G3);
-
-        B4_Image = (ImageView) findViewById(R.id.B4);
-        D4_Image = (ImageView) findViewById(R.id.D4);
-        F4_Image = (ImageView) findViewById(R.id.F4);
-        H4_Image = (ImageView) findViewById(R.id.H4);
-
-        A5_Image = (ImageView) findViewById(R.id.A5);
-        C5_Image = (ImageView) findViewById(R.id.C5);
-        E5_Image = (ImageView) findViewById(R.id.E5);
-        G5_Image = (ImageView) findViewById(R.id.G5);
-
-        B6_Image = (ImageView) findViewById(R.id.B6);
-        D6_Image = (ImageView) findViewById(R.id.D6);
-        F6_Image = (ImageView) findViewById(R.id.F6);
-        H6_Image = (ImageView) findViewById(R.id.H6);
-
-        A7_Image = (ImageView) findViewById(R.id.A7);
-        C7_Image = (ImageView) findViewById(R.id.C7);
-        E7_Image = (ImageView) findViewById(R.id.E7);
-        G7_Image = (ImageView) findViewById(R.id.G7);
-
-        B8_Image = (ImageView) findViewById(R.id.B8);
-        D8_Image = (ImageView) findViewById(R.id.D8);
-        F8_Image = (ImageView) findViewById(R.id.F8);
-        H8_Image = (ImageView) findViewById(R.id.H8);
-    }
-
-    /**
-     * set up the player's pieces
-     */
-    private void initializePlayers()
-    {
-        // 12 pieces go to the player
-        //            (image, type, king, start)
-        p1 = new Piece(playerImage1, PLAYER, false, H8);
-        p2 = new Piece(playerImage2, PLAYER, false, F8);
-        p3 = new Piece(playerImage3, PLAYER, false, D8);
-        p4 = new Piece(playerImage4, PLAYER, false, B8);
-        p5 = new Piece(playerImage5, PLAYER, false, G7);
-        p6 = new Piece(playerImage6, PLAYER, false, E7);
-        p7 = new Piece(playerImage7, PLAYER, false, C7);
-        p8 = new Piece(playerImage8, PLAYER, false, A7);
-        p9 = new Piece(playerImage9, PLAYER, false, H6);
-        p10 = new Piece(playerImage10, PLAYER, false, F6);
-        p11 = new Piece(playerImage11, PLAYER, false, D6);
-        p12 = new Piece(playerImage12, PLAYER, false, B6);
-    }
-
-    /**
-     * set up the opponent's pieces
-     */
-    private void initializeOpponents()
-    {
-        // 12 pieces go to the opponent
-        //            (image, type, king?)
-        o1 = new Piece(opponentImage1, OPPONENT, false, A1);
-        o2 = new Piece(opponentImage2, OPPONENT, false, C1);
-        o3 = new Piece(opponentImage3, OPPONENT, false, E1);
-        o4 = new Piece(opponentImage4, OPPONENT, false, G1);
-        o5 = new Piece(opponentImage5, OPPONENT, false, B2);
-        o6 = new Piece(opponentImage6, OPPONENT, false, D2);
-        o7 = new Piece(opponentImage7, OPPONENT, false, F2);
-        o8 = new Piece(opponentImage8, OPPONENT, false, H2);
-        o9 = new Piece(opponentImage9, OPPONENT, false, A3);
-        o10 = new Piece(opponentImage10, OPPONENT, false, C3);
-        o11 = new Piece(opponentImage11, OPPONENT, false, E3);
-        o12 = new Piece(opponentImage12, OPPONENT, false, G3);
-    }
-
-    /**
-     * initialize all tiles
-     */
-    private void initializeTiles()
-    {
-        // first row
-        //           (image, row, piece, name, x, y, neighbor count, jumps count)
-        A1 = new Tile(A1_Image, 1, o1, "A1", true, 0, 0, 1, 1);
-        C1 = new Tile(C1_Image, 1, o2, "C1", true, 280, 0, 2, 2);
-        E1 = new Tile(E1_Image, 1, o3, "E1", true, 560, 0, 2, 2);
-        G1 = new Tile(G1_Image, 1, o4, "G1", true, 840, 0, 2,  1);
-
-        // second row
-        B2 = new Tile(B2_Image, 2, o5, "B2", true, 140, 140, 4, 1);
-        D2 = new Tile(D2_Image, 2, o6, "D2", true, 420, 140, 4, 2);
-        F2 = new Tile(F2_Image, 2, o7, "F2", true, 700, 140, 4, 2);
-        H2 = new Tile(H2_Image, 2, o8, "H2", true, 980, 140, 2, 1);
-
-        // third row
-        A3 = new Tile(A3_Image, 3, o9, "A3", true, 0, 280, 2, 2);
-        C3 = new Tile(C3_Image, 3, o10, "C3", true, 280, 280, 4, 4);
-        E3 = new Tile(E3_Image, 3, o11, "E3", true, 560, 280, 4, 4);
-        G3 = new Tile(G3_Image, 3, o12, "G3", true, 840, 280, 4, 2);
-
-        // fourth row
-        B4 = new Tile(B4_Image, 4, null, "B4", false, 140, 420, 4, 2);
-        D4 = new Tile(D4_Image, 4, null, "D4", false, 420, 420, 4, 4);
-        F4 = new Tile(F4_Image, 4, null, "F4", false, 700, 420, 4, 4);
-        H4 = new Tile(H4_Image, 4, null, "H4", false, 980, 420, 2, 2);
-
-        // fifth row
-        A5 = new Tile(A5_Image, 5, null, "A5", false, 0, 560, 2, 2);
-        C5 = new Tile(C5_Image, 5, null, "C5", false, 280, 560, 4, 4);
-        E5 = new Tile(E5_Image, 5, null, "E5", false, 560, 560, 4, 4);
-        G5 = new Tile(G5_Image, 5, null, "G5", false, 840, 560, 4, 2);
-
-        // sixth row
-        B6 = new Tile(B6_Image, 6, p12, "B6", true, 140, 700, 4, 2);
-        D6 = new Tile(D6_Image, 6, p11, "D6", true, 420, 700, 4, 4);
-        F6 = new Tile(F6_Image, 6, p10, "F6", true, 700, 700, 4, 4);
-        H6 = new Tile(H6_Image, 6, p9, "H6", true, 980, 700, 2, 2);
-
-        // seventh row
-        A7 = new Tile(A7_Image, 7, p8, "A7", true, 0, 840, 2, 1);
-        C7 = new Tile(C7_Image, 7, p7, "C7", true, 280, 840, 4, 2);
-        E7 = new Tile(E7_Image, 7, p6, "E7", true, 560, 840, 4, 2);
-        G7 = new Tile(G7_Image, 7, p5, "G7", true, 840, 840, 4, 1);
-
-        // sixth row
-        B8 = new Tile(B8_Image, 8, p4, "B8", true, 140, 980, 2, 1);
-        D8 = new Tile(D8_Image, 8, p3, "D8", true, 420, 980, 2, 2);
-        F8 = new Tile(F8_Image, 8, p2, "F8", true, 700, 980, 2, 2);
-        H8 = new Tile(H8_Image, 8, p1, "H8", true, 980, 980, 1, 1);
-    }
-
-    public void addToArray()
-    {
-        tiles.add(A1);
-        tiles.add(C1);
-        tiles.add(E1);
-        tiles.add(G1);
-        tiles.add(B2);
-        tiles.add(D2);
-        tiles.add(F2);
-        tiles.add(H2);
-        tiles.add(A3);
-        tiles.add(C3);
-        tiles.add(E3);
-        tiles.add(G3);
-        tiles.add(B4);
-        tiles.add(D4);
-        tiles.add(F4);
-        tiles.add(H4);
-        tiles.add(A5);
-        tiles.add(C5);
-        tiles.add(E5);
-        tiles.add(G5);
-        tiles.add(B6);
-        tiles.add(D6);
-        tiles.add(F6);
-        tiles.add(H6);
-        tiles.add(A7);
-        tiles.add(C7);
-        tiles.add(E7);
-        tiles.add(G7);
-        tiles.add(B8);
-        tiles.add(D8);
-        tiles.add(F8);
-        tiles.add(H8);
-    }
-
-    /**
-     * This method sets up the connectivity of the tiles
-     */
-    public void setNeighbors()
-    {
-        // ROw ONE
-        A1.addNeighbor(0, B2);
-
-        C1.addNeighbor(0, B2);
-        C1.addNeighbor(1, D2);
-
-        E1.addNeighbor(0, D2);
-        E1.addNeighbor(1, F2);
-
-        G1.addNeighbor(0, F2);
-        G1.addNeighbor(1, H2);
-
-        // ROW TWO
-        B2.addNeighbor(0, A1);
-        B2.addNeighbor(1, C1);
-        B2.addNeighbor(2, A3);
-        B2.addNeighbor(3, C3);
-
-        D2.addNeighbor(0, C1);
-        D2.addNeighbor(1, E1);
-        D2.addNeighbor(2, C3);
-        D2.addNeighbor(3, E3);
-
-        F2.addNeighbor(0, E1);
-        F2.addNeighbor(1, G1);
-        F2.addNeighbor(2, E3);
-        F2.addNeighbor(3, G3);
-
-        H2.addNeighbor(0, G1);
-        H2.addNeighbor(1, G3);
-
-        // ROW THREE
-        A3.addNeighbor(0, B2);
-        A3.addNeighbor(1, B4);
-
-        C3.addNeighbor(0, B2);
-        C3.addNeighbor(1, D2);
-        C3.addNeighbor(2, B4);
-        C3.addNeighbor(3, D4);
-
-        E3.addNeighbor(0, D2);
-        E3.addNeighbor(1, F2);
-        E3.addNeighbor(2, F4);
-        E3.addNeighbor(3, D4);
-
-        G3.addNeighbor(0, F2);
-        G3.addNeighbor(1, H2);
-        G3.addNeighbor(2, F4);
-        G3.addNeighbor(3, H4);
-
-        // ROW FOUR
-        B4.addNeighbor(0, A3);
-        B4.addNeighbor(1, C3);
-        B4.addNeighbor(2, A5);
-        B4.addNeighbor(3, C5);
-
-        D4.addNeighbor(0, C3);
-        D4.addNeighbor(1, E3);
-        D4.addNeighbor(2, C5);
-        D4.addNeighbor(3, E5);
-
-        F4.addNeighbor(0, E3);
-        F4.addNeighbor(1, G3);
-        F4.addNeighbor(2, E5);
-        F4.addNeighbor(3, G5);
-
-        H4.addNeighbor(0, G3);
-        H4.addNeighbor(1, G5);
-
-        // ROW FIVE
-        A5.addNeighbor(0, B4);
-        A5.addNeighbor(1, B6);
-
-        C5.addNeighbor(0, B4);
-        C5.addNeighbor(1, D4);
-        C5.addNeighbor(2, B6);
-        C5.addNeighbor(3, D6);
-
-        E5.addNeighbor(0, D4);
-        E5.addNeighbor(1, F4);
-        E5.addNeighbor(2, D6);
-        E5.addNeighbor(3, F6);
-
-        G5.addNeighbor(0, F4);
-        G5.addNeighbor(1, H4);
-        G5.addNeighbor(2, F6);
-        G5.addNeighbor(3, H6);
-
-        // ROW SIX
-        B6.addNeighbor(0, A5);
-        B6.addNeighbor(1, C5);
-        B6.addNeighbor(2, A7);
-        B6.addNeighbor(3, C7);
-
-        D6.addNeighbor(0, C5);
-        D6.addNeighbor(1, E5);
-        D6.addNeighbor(2, C7);
-        D6.addNeighbor(3, E7);
-
-        F6.addNeighbor(0, E5);
-        F6.addNeighbor(1, G5);
-        F6.addNeighbor(2, E7);
-        F6.addNeighbor(3, G7);
-
-        H6.addNeighbor(0, G5);
-        H6.addNeighbor(1, G7);
-
-        // ROW SEVEN
-        A7.addNeighbor(0, B6);
-        A7.addNeighbor(1, B8);
-
-        C7.addNeighbor(0, B6);
-        C7.addNeighbor(1, D6);
-        C7.addNeighbor(2, B8);
-        C7.addNeighbor(3, D8);
-
-        E7.addNeighbor(0, D6);
-        E7.addNeighbor(1, F6);
-        E7.addNeighbor(2, D8);
-        E7.addNeighbor(3, F8);
-
-        G7.addNeighbor(0, F6);
-        G7.addNeighbor(1, H6);
-        G7.addNeighbor(2, F8);
-        G7.addNeighbor(3, H8);
-
-        // ROW EIGHT
-        B8.addNeighbor(0, A7);
-        B8.addNeighbor(1, C7);
-
-        D8.addNeighbor(0, C7);
-        D8.addNeighbor(1, E7);
-
-        F8.addNeighbor(0, E7);
-        F8.addNeighbor(1, G7);
-
-        H8.addNeighbor(0, G7);
-    }
-
-    public void setJumps()
-    {
-        // ROW ONE
-        A1.addJump(0,C3);
-
-        C1.addJump(0, A3);
-        C1.addJump(1, E3);
-
-        E1.addJump(0, C3);
-        E1.addJump(1, G3);
-
-        G1.addJump(0, E3);
-
-        // ROW TWO
-        B2.addJump(0, D4);
-
-        D2.addJump(0, B4);
-        D2.addJump(1, F4);
-
-        F2.addJump(0, D4);
-        F2.addJump(1, H4);
-
-        H2.addJump(0, F4);
-
-        // ROW THREE
-        A3.addJump(0, C1);
-        A3.addJump(1, C5);
-
-        C3.addJump(0, A1);
-        C3.addJump(1, E1);
-        C3.addJump(2, A5);
-        C3.addJump(3, E5);
-
-        E3.addJump(0, C1);
-        E3.addJump(1, G1);
-        E3.addJump(2, C5);
-        E3.addJump(3, G5);
-
-        G3.addJump(0, E1);
-        G3.addJump(1, E5);
-
-        // ROW FOUR
-        B4.addJump(0, D2);
-        B4.addJump(1, D6);
-
-        D4.addJump(0, B2);
-        D4.addJump(1, F2);
-        D4.addJump(2, B6);
-        D4.addJump(3, F6);
-
-        F4.addJump(0, D2);
-        F4.addJump(1, H2);
-        F4.addJump(2, D6);
-        F4.addJump(3, H6);
-
-        H4.addJump(0, F2);
-        H4.addJump(1, F6);
-
-        // ROW FIVE
-        A5.addJump(0, C3);
-        A5.addJump(1, C7);
-
-        C5.addJump(0, A3);
-        C5.addJump(1, E3);
-        C5.addJump(2, A7);
-        C5.addJump(3, E7);
-
-        E5.addJump(0, C3);
-        E5.addJump(1, G3);
-        E5.addJump(2, C7);
-        E5.addJump(3, G7);
-
-        G5.addJump(0, E3);
-        G5.addJump(1, E7);
-
-        // ROW SIX
-        B6.addJump(0, D4);
-        B6.addJump(1, D8);
-
-        D6.addJump(0, B4);
-        D6.addJump(1, F4);
-        D6.addJump(2, B8);
-        D6.addJump(3, F8);
-
-        F6.addJump(0, D4);
-        F6.addJump(1, H4);
-        F6.addJump(2, D8);
-        F6.addJump(3, H8);
-
-        H6.addJump(0, F4);
-        H6.addJump(1, F8);
-
-        // ROW SEVEN
-        A7.addJump(0, C5);
-
-        C7.addJump(0, A5);
-        C7.addJump(0, E5);
-
-        E7.addJump(0, C5);
-        E7.addJump(1, G5);
-
-        G7.addJump(0, E5);
-
-        // ROW EIGHT
-        B8.addJump(0, D6);
-
-        D8.addJump(0, B6);
-        D8.addJump(1, F6);
-
-        F8.addJump(0, D6);
-        F8.addJump(1, H6);
-
-        H8.addJump(0, F6);
-    }
-
-    public void addOpponents()
-    {
-        opponentTiles.clear();
-        for (int i = 0; i < tiles.size(); i ++)
-        {
-            if (tiles.get(i).hasPiece())
-            {
-                if (tiles.get(i).getPiece().getType().equals(OPPONENT))
-                {
-                    opponentTiles.add(tiles.get(i));
-                }
-            }
         }
     }
 }
