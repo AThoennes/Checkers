@@ -6,8 +6,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import static android.R.attr.y;
-
 /**
  * Created by Alex on 4/28/17.
  */
@@ -173,5 +171,7 @@ public class Game
         {
             y *= -1;
         }
+
+        return false;
     }
 }
