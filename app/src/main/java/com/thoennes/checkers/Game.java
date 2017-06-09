@@ -25,12 +25,6 @@ public class Game
     // array list of all the opponent pieces
     private ArrayList<Piece> opponentPiececs = new ArrayList<>();
 
-    // array of the coords of the spot you are coming from
-    private float [] prevCoords = new float [4];
-
-    // array of the coords of the spot you want to go to
-    private float [] newCoords = new float [4];
-
     private Piece activePiece;
 
     private Tile start;
@@ -42,22 +36,39 @@ public class Game
         this.context = context;
     }
 
+    /**
+     * initialization method for the game
+     *
+     * @param context
+     * @return
+     */
     public static Game init(Context context)
     {
         if (instance == null)
         {
             instance = new Game(context);
-            Game.getGameInstance().prevCoords[0] = -1;
         }
 
         return instance;
     }
 
+    /**
+     * method that is used to get access tot he instance of the game
+     *
+     * @return
+     */
     public static Game getGameInstance()
     {
         return instance;
     }
 
+    /**
+     * used to add tiles to the tile array
+     * as long as the tile array size does
+     * not exceed 32
+     *
+     * @param t
+     */
     public void addTile(Tile t)
     {
 
@@ -67,111 +78,98 @@ public class Game
         }
     }
 
+    /**
+     * used to add opponents to the array
+     *
+     * @param p
+     */
     public void addOpponent(Piece p)
     {
         opponentPiececs.add(p);
     }
 
+    /**
+     * method that is used when adding player pieces
+     * to the array list
+     *
+     * @param p
+     */
     public void addPlayer(Piece p)
     {
         playerPieces.add(p);
     }
 
-    public Tile getTile(int index)
-    {
-        return tiles.get(index);
-    }
-
+    /**
+     * used to obtain access to the tiles array
+     *
+     * @return
+     */
     public ArrayList<Tile> getTiles()
     {
         return tiles;
     }
 
-    public void move(float touchX, float touchY)
+    /**
+     * method that returns the tile tapped on
+     * if it is a valid tile
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public Tile findTappedTile(float x, float y)
     {
-        // go through all the tiles
+        Tile t;
         for (int i = 0; i < tiles.size(); i ++)
         {
-            // create a temp tile to reference
-            // the current tile in the array list
-            Tile t = tiles.get(i);
-
-            // turn the current tile into a float rectangle
+            t = tiles.get(i);
             RectF r = new RectF(t.getLeft(), t.getTop(), t.getRight(), t.getBottom());
 
-            // if this is the tile you tapped
-            if (r.contains(touchX, touchY))
+            if (r.contains(x, y))
             {
-                // you then wan to check if a player piece resides on that tile
-                for (int j = 0; j < playerPieces.size(); j++)
-                {
-                    // create a temp player piece
-                    Piece p = playerPieces.get(j);
-
-                    // if there is a piece on this tile and you haven't chosen a piece to move yet
-                    if (r.contains(p.getX(), p.getY()) && activePiece == null)
-                    {
-                        activePiece = p;
-                        /*prevCoords[0] = t.getLeft();   // left
-                        prevCoords[1] = t.getTop();    // top
-                        prevCoords[2] = t.getRight();  // right
-                        prevCoords[3] = t.getBottom(); // bottom*/
-                        start = t;
-
-                        break;
-                    }
-                    else if (!r.contains(p.getX(), p.getY()) && activePiece != null)
-                    {
-                        /*newCoords[0] = t.getLeft();   // left
-                        newCoords[1] = t.getTop();    // top
-                        newCoords[2] = t.getRight();  // right
-                        newCoords[3] = t.getBottom(); // bottom*/
-                        end = t;
-
-                        attemptMove();
-
-                        activePiece = null;
-                        start = null;
-                        end = null;
-
-                        break;
-                    }
-                }
+                return t;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * This method checks to see if you first tapped a valid tile.
+     * If you did, then it checks to see if that tile has a piece on it
+     * and if it does then it saves that tile as your first then waits
+     * for you to tap a tile without a piece to be saved as the second tile
+     *
+     * @param touchX
+     * @param touchY
+     */
+    public void move(float touchX, float touchY)
+    {
+        Tile t = findTappedTile(touchX, touchY);
+
+        if (t != null && t.hasPiece(playerPieces) && activePiece == null)
+        {
+            activePiece = t.getPiece();
+            start = t;
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        }
+        else if (t != null)
+        {
+            end = t;
+            System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYY");
+            attemptMove();
+            activePiece = null;
+            start = null;
+            end = null;
         }
     }
 
     public void attemptMove()
     {
-        // N O T      W O R K I N G!!!!!!
-        for (int i = 0; i < start.getNeighbors().size(); i ++)
+        // if end is a neighbor of start
+        if (start.isNeighbor(end))
         {
-            // if valid neighbor
-            if (end.getLeft() == start.getNeighbors().get(i).getLeft() &&
-                    end.getTop() == start.getNeighbors().get(i).getTop() &&
-                    end.getRight() == start.getNeighbors().get(i).getRight() &&
-                    end.getBottom() == start.getNeighbors().get(i).getBottom())
-            {
-                Log.d("XXXXXXXXXXXXXXXXXXXXXXX", "POOP");
-            }
+            Log.d("MMMMMMMMMMMMMMMMMMMM", "POOP");
         }
-    }
-
-    public boolean isNeighbor(Tile t)
-    {
-        float x = end.getLeft() - start.getLeft();
-        float y = end.getBottom() - start.getTop();
-
-        if (x < 0)
-        {
-            x *= -1;
-        }
-
-        if (y < 0)
-        {
-            y *= -1;
-        }
-
-        return false;
     }
 }

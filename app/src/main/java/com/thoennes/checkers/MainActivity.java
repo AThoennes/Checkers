@@ -117,24 +117,32 @@ public class MainActivity extends AppCompatActivity
         size = width/8;
 
         generateAssests();
+        //setLinks();
+        links();
 
+        // assign the tile an ID (index in the array)
+        for (int i = 0; i < game.getTiles().size(); i ++)
+        {
+            game.getTiles().get(i).setID(i);
+        }
 
-        //setContentView(new GameBoard(this));
-
-        //tiles = GameBoard.tiles;
-        //pieces = GameBoard.pieces;
-
-        // reference button in the layout
-        //resetButton = (Button) findViewById(btn);
+        // go through each tile and print the neighbors it links to
+        for (int j = 0; j < game.getTiles().size(); j ++)
+        {
+            Tile t = game.getTiles().get(j);
+            System.out.print(j + ":     ");
+            for (int k = 0; k < t.getNeighbors().size(); k ++)
+            {
+                System.out.print(t.getNeighbors().get(k).getID()+",");
+            }
+            System.out.println("\n");
+        }
 
         //mp = MediaPlayer.create(this, R.raw.move);
 
         //winText = (TextView) findViewById(R.id.winText);
 
         //setUp();
-
-        // set up the click listeners for the tiles
-        //onClick();
     }
 
     public void setLinks()
@@ -148,17 +156,24 @@ public class MainActivity extends AppCompatActivity
 
         // 0, 8, 16, 24 are the edge numbers that need to be dealt with specially
         boolean multipleOfEighth = true;
+        int count = 1;
 
         for (int i = 0; i < 32; i ++)
         {
-            if (i % 8 == 0)
+            //Log.d("ZZZZZZZZZZZZZZZZZ", i+"\t"+multipleOfEighth);
+            if (count == 4)
+            {
+                count = 0;
+                multipleOfEighth = !multipleOfEighth;
+            }
+            /*if (i == 0 || i == 8 || i == 16 || i == 24)//i % 8 == 0)
             {
                 multipleOfEighth = true;
             }
             else
             {
                 multipleOfEighth = false;
-            }
+            }*/
 
             if (multipleOfEighth)
             {
@@ -193,6 +208,8 @@ public class MainActivity extends AppCompatActivity
                     handleSpecialCase(i);
                 }
             }
+
+            count ++;
         }
     }
 
@@ -220,7 +237,7 @@ public class MainActivity extends AppCompatActivity
             {
                 game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 4));
             }
-            else if (index != 0) // 1, 2, 3
+            else // 1, 2, 3
             {
                 game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 3));
                 game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 4));
@@ -246,6 +263,49 @@ public class MainActivity extends AppCompatActivity
             game.getTiles().get(index).addNeighbor(game.getTiles().get(index - 4));
 
             game.getTiles().get(index).addNeighbor(game.getTiles().get(index + 4));
+        }
+    }
+
+    /**
+     * method that creates all the tiles and pieces
+     * for both players
+     */
+    public void generateAssests()
+    {
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                // bounds of the tiles
+                float left = row * size;
+                float top = col * size;
+                float right = left + size;
+                float bottom = top + size;
+
+                if ((row + col) % 2 == 0)
+                {
+                    float circleX = left + size / 2;
+                    float circleY = top + size / 2;
+
+                    Game.getGameInstance().addTile(new Tile(left, top, right, bottom, 0));
+
+                    // top 3 rows are where the opponent starts
+                    if (col < 3)
+                    {
+                        Game.getGameInstance().addOpponent(new Piece(circleX, circleY));
+                    } // bottom 3 rows are where the player starts
+                    else if (col > 4)
+                    {
+                        Game.getGameInstance().addPlayer(new Piece(circleX, circleY));
+                    }
+                }
+            }
+        }
+
+        // the ID of each tile is its spot in the array
+        for (int i = 0; i < Game.getGameInstance().getTiles().size(); i ++)
+        {
+            Game.getGameInstance().getTiles().get(i).setID(i);
         }
     }
 
@@ -357,38 +417,6 @@ public class MainActivity extends AppCompatActivity
             });
         }
     }*/
-
-    public void generateAssests()
-    {
-        for (int row = 0; row < 8; row++)
-        {
-            for (int col = 0; col < 8; col++)
-            {
-                // boundds of the tiles
-                float left = row * size;
-                float top = col * size;
-                float right = left + size;
-                float bottom = top + size;
-
-                if ((row + col) % 2 == 0)
-                {
-                    float circleX = left + size / 2;
-                    float circleY = top + size / 2;
-
-                    Game.getGameInstance().addTile(new Tile(left, top, right, bottom));
-
-                    if (col < 3)
-                    {
-                        Game.getGameInstance().addOpponent(new Piece(circleX, circleY));
-                    }
-                    else if (col > 4)
-                    {
-                        Game.getGameInstance().addPlayer(new Piece(circleX, circleY));
-                    }
-                }
-            }
-        }
-    }
 
     /**
      * Restarts the game by resetting all the variables
@@ -599,7 +627,7 @@ public class MainActivity extends AppCompatActivity
     {
         if (findMiddle(prev, next).hasPiece())
         {
-            findMiddle(prev, next).getPiece().getImage().setVisibility(View.INVISIBLE);
+            //findMiddle(prev, next).getPiece().getImage().setVisibility(View.INVISIBLE);
             findMiddle(prev, next).setPiece(null);
             findMiddle(prev, next).setTaken(false);
         }
@@ -694,7 +722,7 @@ public class MainActivity extends AppCompatActivity
     {
         if (newPos.getRow() == 1 && newPos.getPiece().getType().equals(PLAYER))
         {
-            newPos.getPiece().getImage().setImageResource(R.drawable.player_king);
+            //newPos.getPiece().getImage().setImageResource(R.drawable.player_king);
             newPos.getPiece().setKing(true);
         }
     }
@@ -706,7 +734,7 @@ public class MainActivity extends AppCompatActivity
     {
         if (AI_new.getRow() == 8 && AI_new.getPiece().getType().equals(OPPONENT))
         {
-            AI_new.getPiece().getImage().setImageResource(R.drawable.opponent_king);
+            //AI_new.getPiece().getImage().setImageResource(R.drawable.opponent_king);
             AI_new.getPiece().setKing(true);
         }
     }
@@ -855,7 +883,7 @@ public class MainActivity extends AppCompatActivity
         if (AI_prev.getPiece().isKing())
         {
             // if it is then draw the piece onto the new tile
-            AI_prev.getPiece().draw(AI_new);
+            //AI_prev.getPiece().draw(AI_new);
             mp.start();
 
             removeJumpedPiece(AI_prev, AI_new);
@@ -867,7 +895,7 @@ public class MainActivity extends AppCompatActivity
             if (AI_new.getRow() > AI_prev.getRow())
             {
                 // then draw and reset variables used for moving
-                AI_prev.getPiece().draw(AI_new);
+               // AI_prev.getPiece().draw(AI_new);
                 mp.start();
 
                 removeJumpedPiece(AI_prev, AI_new);
@@ -940,13 +968,13 @@ public class MainActivity extends AppCompatActivity
         if (AI_prev.getPiece().isKing())
         {
             // if it is then draw the piece onto the new tile
-            AI_prev.getPiece().draw(AI_new);
+            //AI_prev.getPiece().draw(AI_new);
 
         } // otherwise if a non-king piece is moving
         else if (AI_new.getRow() > AI_prev.getRow())
         {
             // then draw and reset variables used for moving
-            AI_prev.getPiece().draw(AI_new);
+           // AI_prev.getPiece().draw(AI_new);
             mp.start();
         }
     }
@@ -1142,5 +1170,139 @@ public class MainActivity extends AppCompatActivity
         {
             tiles.get(i).getImage().setOnClickListener(null);
         }
+    }
+
+    public void links()
+    {
+        Game game = Game.getGameInstance();
+        game.getTiles().get(0).addNeighbor(game.getTiles().get(4));
+
+        game.getTiles().get(1).addNeighbor(game.getTiles().get(4));
+        game.getTiles().get(1).addNeighbor(game.getTiles().get(5));
+
+        game.getTiles().get(2).addNeighbor(game.getTiles().get(5));
+        game.getTiles().get(2).addNeighbor(game.getTiles().get(6));
+
+        game.getTiles().get(3).addNeighbor(game.getTiles().get(6));
+        game.getTiles().get(3).addNeighbor(game.getTiles().get(7));
+
+        game.getTiles().get(4).addNeighbor(game.getTiles().get(0));
+        game.getTiles().get(4).addNeighbor(game.getTiles().get(1));
+        game.getTiles().get(4).addNeighbor(game.getTiles().get(8));
+        game.getTiles().get(4).addNeighbor(game.getTiles().get(9));
+
+        game.getTiles().get(5).addNeighbor(game.getTiles().get(1));
+        game.getTiles().get(5).addNeighbor(game.getTiles().get(2));
+        game.getTiles().get(5).addNeighbor(game.getTiles().get(9));
+        game.getTiles().get(5).addNeighbor(game.getTiles().get(10));
+
+        game.getTiles().get(6).addNeighbor(game.getTiles().get(2));
+        game.getTiles().get(6).addNeighbor(game.getTiles().get(3));
+        game.getTiles().get(6).addNeighbor(game.getTiles().get(1));
+        game.getTiles().get(6).addNeighbor(game.getTiles().get(11));
+
+        game.getTiles().get(7).addNeighbor(game.getTiles().get(3));
+        game.getTiles().get(7).addNeighbor(game.getTiles().get(11));
+
+        game.getTiles().get(8).addNeighbor(game.getTiles().get(4));
+        game.getTiles().get(8).addNeighbor(game.getTiles().get(12));
+
+        game.getTiles().get(9).addNeighbor(game.getTiles().get(4));
+        game.getTiles().get(9).addNeighbor(game.getTiles().get(5));
+        game.getTiles().get(9).addNeighbor(game.getTiles().get(12));
+        game.getTiles().get(9).addNeighbor(game.getTiles().get(13));
+
+        game.getTiles().get(10).addNeighbor(game.getTiles().get(5));
+        game.getTiles().get(10).addNeighbor(game.getTiles().get(6));
+        game.getTiles().get(10).addNeighbor(game.getTiles().get(13));
+        game.getTiles().get(10).addNeighbor(game.getTiles().get(14));
+
+        game.getTiles().get(11).addNeighbor(game.getTiles().get(6));
+        game.getTiles().get(11).addNeighbor(game.getTiles().get(7));
+        game.getTiles().get(11).addNeighbor(game.getTiles().get(11));
+        game.getTiles().get(11).addNeighbor(game.getTiles().get(15));
+
+        game.getTiles().get(12).addNeighbor(game.getTiles().get(8));
+        game.getTiles().get(12).addNeighbor(game.getTiles().get(9));
+        game.getTiles().get(12).addNeighbor(game.getTiles().get(16));
+        game.getTiles().get(12).addNeighbor(game.getTiles().get(17));
+
+        game.getTiles().get(13).addNeighbor(game.getTiles().get(9));
+        game.getTiles().get(13).addNeighbor(game.getTiles().get(10));
+        game.getTiles().get(13).addNeighbor(game.getTiles().get(17));
+        game.getTiles().get(13).addNeighbor(game.getTiles().get(18));
+
+        game.getTiles().get(14).addNeighbor(game.getTiles().get(10));
+        game.getTiles().get(14).addNeighbor(game.getTiles().get(11));
+        game.getTiles().get(14).addNeighbor(game.getTiles().get(18));
+        game.getTiles().get(14).addNeighbor(game.getTiles().get(19));
+
+        game.getTiles().get(15).addNeighbor(game.getTiles().get(11));
+        game.getTiles().get(15).addNeighbor(game.getTiles().get(19));
+
+        game.getTiles().get(16).addNeighbor(game.getTiles().get(12));
+        game.getTiles().get(16).addNeighbor(game.getTiles().get(20));
+
+        game.getTiles().get(17).addNeighbor(game.getTiles().get(12));
+        game.getTiles().get(17).addNeighbor(game.getTiles().get(13));
+        game.getTiles().get(17).addNeighbor(game.getTiles().get(20));
+        game.getTiles().get(17).addNeighbor(game.getTiles().get(21));
+
+        game.getTiles().get(18).addNeighbor(game.getTiles().get(13));
+        game.getTiles().get(18).addNeighbor(game.getTiles().get(14));
+        game.getTiles().get(18).addNeighbor(game.getTiles().get(21));
+        game.getTiles().get(18).addNeighbor(game.getTiles().get(22));
+
+        game.getTiles().get(19).addNeighbor(game.getTiles().get(14));
+        game.getTiles().get(19).addNeighbor(game.getTiles().get(15));
+        game.getTiles().get(19).addNeighbor(game.getTiles().get(22));
+        game.getTiles().get(19).addNeighbor(game.getTiles().get(23));
+
+        game.getTiles().get(20).addNeighbor(game.getTiles().get(16));
+        game.getTiles().get(20).addNeighbor(game.getTiles().get(17));
+        game.getTiles().get(20).addNeighbor(game.getTiles().get(24));
+        game.getTiles().get(20).addNeighbor(game.getTiles().get(25));
+
+        game.getTiles().get(21).addNeighbor(game.getTiles().get(17));
+        game.getTiles().get(21).addNeighbor(game.getTiles().get(18));
+        game.getTiles().get(21).addNeighbor(game.getTiles().get(25));
+        game.getTiles().get(21).addNeighbor(game.getTiles().get(26));
+
+        game.getTiles().get(22).addNeighbor(game.getTiles().get(18));
+        game.getTiles().get(22).addNeighbor(game.getTiles().get(19));
+        game.getTiles().get(22).addNeighbor(game.getTiles().get(26));
+        game.getTiles().get(22).addNeighbor(game.getTiles().get(27));
+
+        game.getTiles().get(23).addNeighbor(game.getTiles().get(19));
+        game.getTiles().get(23).addNeighbor(game.getTiles().get(27));
+
+        game.getTiles().get(24).addNeighbor(game.getTiles().get(20));
+        game.getTiles().get(24).addNeighbor(game.getTiles().get(28));
+
+        game.getTiles().get(25).addNeighbor(game.getTiles().get(20));
+        game.getTiles().get(25).addNeighbor(game.getTiles().get(21));
+        game.getTiles().get(25).addNeighbor(game.getTiles().get(28));
+        game.getTiles().get(25).addNeighbor(game.getTiles().get(29));
+
+        game.getTiles().get(26).addNeighbor(game.getTiles().get(21));
+        game.getTiles().get(26).addNeighbor(game.getTiles().get(22));
+        game.getTiles().get(26).addNeighbor(game.getTiles().get(29));
+        game.getTiles().get(26).addNeighbor(game.getTiles().get(30));
+
+        game.getTiles().get(27).addNeighbor(game.getTiles().get(22));
+        game.getTiles().get(27).addNeighbor(game.getTiles().get(23));
+        game.getTiles().get(27).addNeighbor(game.getTiles().get(30));
+        game.getTiles().get(27).addNeighbor(game.getTiles().get(31));
+
+        game.getTiles().get(28).addNeighbor(game.getTiles().get(24));
+        game.getTiles().get(28).addNeighbor(game.getTiles().get(25));
+
+        game.getTiles().get(29).addNeighbor(game.getTiles().get(25));
+        game.getTiles().get(29).addNeighbor(game.getTiles().get(26));
+
+        game.getTiles().get(30).addNeighbor(game.getTiles().get(26));
+        game.getTiles().get(30).addNeighbor(game.getTiles().get(27));
+
+        game.getTiles().get(31).addNeighbor(game.getTiles().get(27));
     }
 }

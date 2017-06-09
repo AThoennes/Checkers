@@ -1,7 +1,5 @@
 package com.thoennes.checkers;
 
-import android.widget.ImageView;
-
 /**
  * Created by Alex on 12/25/16.
  *
@@ -10,51 +8,27 @@ import android.widget.ImageView;
 
 class Piece
 {
-    // image of the piece
-    private ImageView image;
-
     // is this a player or opponent
     private String type;
 
     // is this piece a king
     private boolean king = false;
 
+    // coordinates (in float) of the
+    // piece on the screen
+    private float x;
+    private float y;
+
     /**
-     * default constructor for a piece
+     * Constructor for a basic piece
      *
-     * @param image
-     * @param type
-     * @param king
-     * @param start
+     * @param x
+     * @param y
      */
-    public Piece(ImageView image, String type, boolean king, Tile start)
-    {
-        this.image = image;
-        this.type = type;
-        this.king = king;
-
-        // draw the tiles at their
-        // starting positions
-        draw(start);
-    }
-
-    private float x, y;
-
     public Piece(float x, float y)
     {
         this.x = x;
         this.y = y;
-    }
-
-    /**
-     * This method draws the piece at the desired tile
-     *
-     * @param a
-     */
-    public void draw(Tile a)
-    {
-        image.animate().translationX(a.getX());
-        image.animate().translationY(a.getY());
     }
 
     /**
@@ -67,6 +41,11 @@ class Piece
         return king;
     }
 
+    /**
+     * used to make this piece a king
+     *
+     * @param king
+     */
     public void setKing(boolean king)
     {
         this.king = king;
@@ -83,30 +62,40 @@ class Piece
     }
 
     /**
-     * returns the image of this piece
+     * returns the X coordinate of the piece
      *
-     * @return image
+     * @return
      */
-    public ImageView getImage()
-    {
-        return image;
-    }
-
     public float getX()
     {
         return x;
     }
 
+    /**
+     * changes the X coordinate of the piece
+     *
+     * @param x
+     */
     public void setX(float x)
     {
         this.x = x;
     }
 
+    /**
+     * returns the Y coordinate of the piece
+     *
+     * @return
+     */
     public float getY()
     {
         return y;
     }
 
+    /**
+     * changes the Y coordinate of the piece
+     *
+     * @param y
+     */
     public void setY(float y)
     {
         this.y = y;

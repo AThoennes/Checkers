@@ -1,5 +1,6 @@
 package com.thoennes.checkers;
 
+import android.graphics.RectF;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -40,46 +41,23 @@ public class Tile {
     // array of tiles this tile can jump to (jumps)
     private Tile[] jumps;
 
-    /**
-     * Default constructor for a tile
-     *
-     * @param image
-     * @param row
-     * @param piece
-     * @param name
-     * @param taken
-     * @param x
-     * @param y
-     * @param neighborsSize
-     * @param jumpSize
-     */
-    public Tile(ImageView image, int row, Piece piece, String name, boolean taken, float x, float y, int neighborsSize, int jumpSize) {
-        this.image = image;
-        this.row = row;
-        this.piece = piece;
-        this.name = name;
-        this.taken = taken;
-        this.x = x;
-        this.y = y;
-        this.neighbors = new Tile[neighborsSize];
-        this.jumps = new Tile[jumpSize];
-    }
-
     private float left, top, right, bottom;
-    private int c;
+    private int id;
 
     /**
+     * Constructor for the game Tiles
      *
      * @param left
      * @param top
      * @param right
      * @param bottom
      */
-    public Tile(float left, float top, float right, float bottom) {
+    public Tile(float left, float top, float right, float bottom, int id) {
         this.left = left;
         this.top = top;
         this.right = right;
         this.bottom = bottom;
+        this.id = id;
     }
 
     @Override
@@ -284,8 +262,57 @@ public class Tile {
         return false;
     }
 
+    public boolean hasPiece(ArrayList<Piece> pieces)
+    {
+        return getPiece(pieces) != null;
+    }
+
+    public Piece getPiece(ArrayList<Piece> pieces)
+    {
+        RectF r = new RectF(this.left, this.top, this.right, this.bottom);
+
+        for (int i = 0; i < pieces.size(); i ++)
+        {
+            if (r.contains(pieces.get(i).getX(), pieces.get(i).getY()))
+            {
+                return pieces.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * checks to see if end is a neighbor of start
+     *
+     * @param end
+     * @return
+     */
+    public boolean isNeighbor(Tile end)
+    {
+        for (int i = 0; i < this.getNeighbors().size(); i ++)
+        {
+            if (end.getID() == this.getNeighbors().get(i).getID())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public String toString()
     {
         return name;
+    }
+
+    public int getID()
+    {
+        return this.id;
+    }
+
+    public void setID(int id)
+    {
+        this.id = id;
     }
 }
