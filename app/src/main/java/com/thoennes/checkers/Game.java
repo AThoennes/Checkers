@@ -19,15 +19,19 @@ public class Game
     // array list of all possible tiles you can move to
     static private ArrayList<Tile> tiles = new ArrayList<>();
 
+    // invalid tiles are only used when drawing the board
+    static private ArrayList<Tile> invalidTiles = new ArrayList<>();
+
     // array list of all the player pieces
     private ArrayList<Piece> playerPieces = new ArrayList<>();
 
     // array list of all the opponent pieces
     private ArrayList<Piece> opponentPiececs = new ArrayList<>();
 
-    private Piece activePiece;
-
+    // this is the tile you want to move from
     private Tile start;
+
+    // this is the tile you want to move to
     private Tile end;
 
     //private constructor to avoid client applications to use constructor
@@ -71,10 +75,23 @@ public class Game
      */
     public void addTile(Tile t)
     {
-
         if (tiles.size() < 32)
         {
             tiles.add(t);
+        }
+    }
+
+    /**
+     * Adds an invalid tile (one you can not move to)
+     * to the array list
+     *
+     * @param t
+     */
+    public void addInvalidTile(Tile t)
+    {
+        if (invalidTiles.size() < 32)
+        {
+            invalidTiles.add(t);
         }
     }
 
@@ -110,6 +127,36 @@ public class Game
     }
 
     /**
+     * returns the array list of the invalid tiles
+     *
+     * @return
+     */
+    public ArrayList<Tile> getInvalidTiles()
+    {
+        return invalidTiles;
+    }
+
+    /**
+     * Returns the array list of the player's pieces
+     *
+     * @return
+     */
+    public ArrayList<Piece> getPlayerPieces()
+    {
+        return playerPieces;
+    }
+
+    /**
+     * return the array list of the opposing pieces
+     *
+     * @return
+     */
+    public ArrayList<Piece> getOpponentPieces()
+    {
+        return opponentPiececs;
+    }
+
+    /**
      * method that returns the tile tapped on
      * if it is a valid tile
      *
@@ -127,6 +174,7 @@ public class Game
 
             if (r.contains(x, y))
             {
+                System.out.println("VALID TILE");
                 return t;
             }
         }
@@ -147,18 +195,16 @@ public class Game
     {
         Tile t = findTappedTile(touchX, touchY);
 
-        if (t != null && t.hasPiece(playerPieces) && activePiece == null)
+        if (t != null && t.hasPiece(playerPieces) && start == null)
         {
-            activePiece = t.getPiece();
             start = t;
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX");
         }
-        else if (t != null)
+        else if (t != null && !t.hasPiece(playerPieces) && start != null)
         {
             end = t;
             System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYY");
             attemptMove();
-            activePiece = null;
             start = null;
             end = null;
         }
@@ -166,10 +212,22 @@ public class Game
 
     public void attemptMove()
     {
+        float x = end.getLeft() + (MainActivity.size/2);
+        float y = end.getTop()+ (MainActivity.size/2);
+
         // if end is a neighbor of start
         if (start.isNeighbor(end))
         {
-            Log.d("MMMMMMMMMMMMMMMMMMMM", "POOP");
+            if (end.getID() > start.getID() && start.getPiece(playerPieces).isKing())
+            {
+                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED");
+                start.getPiece(playerPieces).setXY(x, y);
+            }
+            else if (end.getID() < start.getID())
+            {
+                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED");
+                start.getPiece(playerPieces).setXY(x, y);
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.thoennes.checkers;
 
+import android.graphics.Paint;
+
 /**
  * Created by Alex on 12/25/16.
  *
@@ -8,9 +10,6 @@ package com.thoennes.checkers;
 
 class Piece
 {
-    // is this a player or opponent
-    private String type;
-
     // is this piece a king
     private boolean king = false;
 
@@ -19,16 +18,19 @@ class Piece
     private float x;
     private float y;
 
+    private Paint color;
+
     /**
      * Constructor for a basic piece
      *
      * @param x
      * @param y
      */
-    public Piece(float x, float y)
+    public Piece(float x, float y, Paint color)
     {
         this.x = x;
         this.y = y;
+        this.color = color;
     }
 
     /**
@@ -51,14 +53,9 @@ class Piece
         this.king = king;
     }
 
-    /**
-     * returns the type of this piece (player or opponent)
-     *
-     * @return type
-     */
-    public String getType()
+    public Paint getColor()
     {
-        return type;
+        return color;
     }
 
     /**
@@ -72,16 +69,6 @@ class Piece
     }
 
     /**
-     * changes the X coordinate of the piece
-     *
-     * @param x
-     */
-    public void setX(float x)
-    {
-        this.x = x;
-    }
-
-    /**
      * returns the Y coordinate of the piece
      *
      * @return
@@ -92,12 +79,14 @@ class Piece
     }
 
     /**
-     * changes the Y coordinate of the piece
+     * set the values for both X and Y
      *
+     * @param x
      * @param y
      */
-    public void setY(float y)
+    public void setXY(float x, float y)
     {
+        this.x = x;
         this.y = y;
     }
 }
