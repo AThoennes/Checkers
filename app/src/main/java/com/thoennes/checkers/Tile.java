@@ -24,6 +24,8 @@ public class Tile
     // color of the tile (black or red)
     private Paint color;
 
+    private float [] center;
+
     /**
      * Constructor for the game Tiles
      *
@@ -41,19 +43,22 @@ public class Tile
         this.color = color;
     }
 
+    public Tile(float left, float top, float right, float bottom, float [] center, Paint color) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        this.center = center;
+        this.color = color;
+    }
+
     @Override
     public boolean equals(Object obj)
     {
         super.equals(obj);
 
         // if the object is compared with itself
-        if (obj == this)
-        {
-            return true;
-        }
-
-        // if the object isn't a tile
-        return !(obj instanceof Tile);
+        return obj == this;
     }
 
     public float getLeft() {
@@ -121,15 +126,20 @@ public class Tile
      */
     public boolean isNeighbor(Tile end)
     {
-        for (int i = 0; i < this.getNeighbors().size(); i ++)
+        for (int i = 0; i < getNeighbors().size(); i ++)
         {
-            if (end.getID() == this.getNeighbors().get(i).getID())
+            if (end.equals(getNeighbors().get(i)))//end.getID() == getNeighbors().get(i).getID())
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public boolean isEmpty(ArrayList<Piece> player, ArrayList<Piece> opponent)
+    {
+        return !this.hasPiece(player) && !this.hasPiece(opponent);
     }
 
     public int getID()

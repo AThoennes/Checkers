@@ -44,10 +44,7 @@ public class MainActivity extends AppCompatActivity
         links();
 
         // assign the tile an ID (index in the array)
-        for (int i = 0; i < game.getTiles().size(); i ++)
-        {
-            game.getTiles().get(i).setID(i);
-        }
+        index();
 
         // USED TO DEBUG FOR NOW
         // go through each tile and print the neighbors it links to
@@ -61,6 +58,8 @@ public class MainActivity extends AppCompatActivity
             }
             System.out.println("\n");
         }
+
+        index();
     }
 
     public void setLinks()
@@ -204,8 +203,13 @@ public class MainActivity extends AppCompatActivity
         Paint player = new Paint();
         player.setColor(Color.rgb(255, 128, 0));
 
+        Game game = Game.getGameInstance();
+        int tileNum = 0;
+
         for (int row = 0; row < 8; row++)
         {
+            //if ( (row % 2) != 0) tileNum =  tileNum+1;
+            System.out.print("ROW: " + row + ", TILENUM: " + tileNum + "\n");
             for (int col = 0; col < 8; col++)
             {
                 // bounds of the tiles
@@ -219,30 +223,36 @@ public class MainActivity extends AppCompatActivity
                     float circleX = left + size / 2;
                     float circleY = top + size / 2;
 
-                    Game.getGameInstance().addTile(new Tile(left, top, right, bottom, 0, black));
+                    // you are adding the tiles vertically and not horizontally
+                    // which is why the numbering is off. the y*W+x does work
+                    // but you are still adding the tiles vertically
+                    game.addTile(new Tile(left, top, right, bottom, tileNum, black));
+                    System.out.print("*******TILENUM: " + tileNum + "\n");
+                    tileNum++;
+
+                    /*if (col < 7)
+                    {
+                        tileNum += 2;
+                    } else {
+                        tileNum ++;
+                    }*/
 
                     // top 3 rows are where the opponent starts
                     if (col < 3)
                     {
-                        Game.getGameInstance().addOpponent(new Piece(circleX, circleY, opponent));
+                        game.addOpponent(new Piece(circleX, circleY, opponent));
                     } // bottom 3 rows are where the player starts
                     else if (col > 4)
                     {
-                        Game.getGameInstance().addPlayer(new Piece(circleX, circleY, player));
+                        game.addPlayer(new Piece(circleX, circleY, player));
                     }
                 }
                 else
                 {
                     // invalid tiles that are just used for drawing
-                    Game.getGameInstance().addInvalidTile(new Tile(left, top, right, bottom, -1, red));
+                    game.addInvalidTile(new Tile(left, top, right, bottom, -1, red));
                 }
             }
-        }
-
-        // the ID of each tile is its spot in the tiles array
-        for (int i = 0; i < Game.getGameInstance().getTiles().size(); i ++)
-        {
-            Game.getGameInstance().getTiles().get(i).setID(i);
         }
     }
 
@@ -273,7 +283,7 @@ public class MainActivity extends AppCompatActivity
 
         game.getTiles().get(6).addNeighbor(game.getTiles().get(2));
         game.getTiles().get(6).addNeighbor(game.getTiles().get(3));
-        game.getTiles().get(6).addNeighbor(game.getTiles().get(1));
+        game.getTiles().get(6).addNeighbor(game.getTiles().get(10));
         game.getTiles().get(6).addNeighbor(game.getTiles().get(11));
 
         game.getTiles().get(7).addNeighbor(game.getTiles().get(3));
@@ -365,7 +375,7 @@ public class MainActivity extends AppCompatActivity
         game.getTiles().get(26).addNeighbor(game.getTiles().get(30));
 
         game.getTiles().get(27).addNeighbor(game.getTiles().get(22));
-        game.getTiles().get(27).addNeighbor(game.getTiles().get(23));
+         game.getTiles().get(27).addNeighbor(game.getTiles().get(23));
         game.getTiles().get(27).addNeighbor(game.getTiles().get(30));
         game.getTiles().get(27).addNeighbor(game.getTiles().get(31));
 
@@ -379,5 +389,49 @@ public class MainActivity extends AppCompatActivity
         game.getTiles().get(30).addNeighbor(game.getTiles().get(27));
 
         game.getTiles().get(31).addNeighbor(game.getTiles().get(27));
+    }
+
+    public void index()
+    {
+        Game game = Game.getGameInstance();
+
+        game.getTiles().get(8).setID(1);
+        game.getTiles().get(16).setID(2);
+        game.getTiles().get(24).setID(3);
+
+        game.getTiles().get(4).setID(4);
+        game.getTiles().get(12).setID(5);
+        game.getTiles().get(20).setID(6);
+        game.getTiles().get(28).setID(7);
+
+        game.getTiles().get(1).setID(8);
+        game.getTiles().get(9).setID(9);
+        game.getTiles().get(17).setID(10);
+        game.getTiles().get(25).setID(11);
+
+        game.getTiles().get(5).setID(12);
+        game.getTiles().get(13).setID(13);
+        game.getTiles().get(21).setID(14);
+        game.getTiles().get(29).setID(15);
+
+        game.getTiles().get(2).setID(16);
+        game.getTiles().get(10).setID(17);
+        game.getTiles().get(18).setID(18);
+        game.getTiles().get(26).setID(19);
+
+        game.getTiles().get(6).setID(20);
+        game.getTiles().get(14).setID(21);
+        game.getTiles().get(22).setID(22);
+        game.getTiles().get(30).setID(23);
+
+        game.getTiles().get(3).setID(24);
+        game.getTiles().get(11).setID(25);
+        game.getTiles().get(19).setID(26);
+        game.getTiles().get(27).setID(27);
+
+        game.getTiles().get(7).setID(28);
+        game.getTiles().get(15).setID(29);
+        game.getTiles().get(23).setID(30);
+        game.getTiles().get(31).setID(31);
     }
 }

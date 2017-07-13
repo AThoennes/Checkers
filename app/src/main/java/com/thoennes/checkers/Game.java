@@ -174,7 +174,7 @@ public class Game
 
             if (r.contains(x, y))
             {
-                System.out.println("VALID TILE");
+                System.out.println(t.getID());
                 return t;
             }
         }
@@ -200,7 +200,7 @@ public class Game
             start = t;
             System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX");
         }
-        else if (t != null && !t.hasPiece(playerPieces) && start != null)
+        else if (t != null && t.isEmpty(playerPieces, opponentPiececs) && start != null)
         {
             end = t;
             System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYY");
@@ -220,14 +220,18 @@ public class Game
         {
             if (end.getID() > start.getID() && start.getPiece(playerPieces).isKing())
             {
-                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED");
+                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED KING");
                 start.getPiece(playerPieces).setXY(x, y);
             }
             else if (end.getID() < start.getID())
             {
-                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED");
+                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED NON-KING");
                 start.getPiece(playerPieces).setXY(x, y);
             }
+        }
+        else if (!start.isNeighbor(end))
+        {
+            Log.d("NNNNNNNNNNNNNNNNNNNNNNN", "NOT A NEIGHBOR");
         }
     }
 }

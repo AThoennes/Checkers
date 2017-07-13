@@ -150,7 +150,7 @@ public class GameBoard extends View
 
             for (int j = 0; j < Game.getGameInstance().getOpponentPieces().size(); j ++)
             {
-                Piece p = game.getPlayerPieces().get(j);
+                Piece p = game.getOpponentPieces().get(j);
                 canvas.drawCircle(p.getX(), p.getY(), radius, p.getColor());
             }
         }
