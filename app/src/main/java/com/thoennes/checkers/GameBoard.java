@@ -2,8 +2,6 @@ package com.thoennes.checkers;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,16 +13,11 @@ import android.view.View;
 
 public class GameBoard extends View
 {
+    // set to true when the board has been drawn the first time
     boolean initialized = false;
 
     // size of each square tile
-    float size;
-
-    // paint objects used to paint the tiles and pieces
-    Paint red; // red tiles are just for show, you can only move on the black tiles
-    Paint black; // black tiles are the playable ones and these contain pieces
-    Paint opponentColor; // used to draw the opponent pieces which are blue
-    Paint playerColor; // used to draw the player pieces which are orange
+    private float size;
 
     private float radius;
 
@@ -47,25 +40,7 @@ public class GameBoard extends View
         init(context);
     }
 
-    private void init(Context context)
-    {
-
-        // set the color of the red tile painter
-        red = new Paint();
-        red.setColor(Color.RED);
-
-        // set the color of the black tile painter
-        black = new Paint();
-        black.setColor(Color.BLACK);
-
-        // set the color of the opponent painter
-        opponentColor = new Paint();
-        opponentColor.setColor(Color.rgb(0, 0, 500));
-
-        // set the color of the player painter
-        playerColor = new Paint();
-        playerColor.setColor(Color.rgb(255, 128, 0));
-    }
+    private void init(Context context) {}
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
@@ -77,6 +52,7 @@ public class GameBoard extends View
     public boolean onTouchEvent(MotionEvent event)
     {
         Game.getGameInstance().move(event.getX(), event.getY());
+        Game.getGameInstance().getAI().move();
         invalidate();
         return super.onTouchEvent(event);
     }
@@ -86,7 +62,6 @@ public class GameBoard extends View
     {
         super.onDraw(canvas);
         drawGameBoard(canvas);
-        //canvas.drawCircle(0,0,radius, black);
     }
 
     private void drawGameBoard(Canvas canvas)
@@ -112,12 +87,12 @@ public class GameBoard extends View
                         float circleX = left + size / 2;
                         float circleY = top + size / 2;
                         radius = size / 2;
-                        canvas.drawRect(left, top, right, bottom, black);
+                        canvas.drawRect(left, top, right, bottom, Game.getGameInstance().getBlack());
                         drawPiece(col, circleX, circleY, radius, canvas);
                     }
                     else
                     {
-                        canvas.drawRect(left, top, right, bottom, red);
+                        canvas.drawRect(left, top, right, bottom, Game.getGameInstance().getRed());
                     }
                 }
             }
@@ -148,6 +123,7 @@ public class GameBoard extends View
                 canvas.drawCircle(p.getX(), p.getY(), radius, p.getColor());
             }
 
+            // draw opponent pieces
             for (int j = 0; j < Game.getGameInstance().getOpponentPieces().size(); j ++)
             {
                 Piece p = game.getOpponentPieces().get(j);
@@ -160,11 +136,11 @@ public class GameBoard extends View
     {
         if (col < 3)
         {
-            canvas.drawCircle(x, y, radius, opponentColor);
+            canvas.drawCircle(x, y, radius, Game.getGameInstance().getOpponent());
         }
         else if (col > 4)
         {
-            canvas.drawCircle(x, y, radius, playerColor);
+            canvas.drawCircle(x, y, radius, Game.getGameInstance().getPlayer());
         }
     }
 }

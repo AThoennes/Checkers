@@ -1,13 +1,19 @@
 package com.thoennes.checkers;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
+import android.media.MediaPlayer;
 
 import java.util.ArrayList;
 
+import static com.thoennes.checkers.MainActivity.size;
+
 /**
  * Created by Alex on 4/28/17.
+ *
+ * Game Class
  */
 public class Game
 {
@@ -17,16 +23,16 @@ public class Game
     private Context context;
 
     // array list of all possible tiles you can move to
-    static private ArrayList<Tile> tiles = new ArrayList<>();
+    private ArrayList<Tile> tiles = new ArrayList<>();
 
     // invalid tiles are only used when drawing the board
-    static private ArrayList<Tile> invalidTiles = new ArrayList<>();
+    private ArrayList<Tile> invalidTiles = new ArrayList<>();
 
     // array list of all the player pieces
     private ArrayList<Piece> playerPieces = new ArrayList<>();
 
     // array list of all the opponent pieces
-    private ArrayList<Piece> opponentPiececs = new ArrayList<>();
+    private ArrayList<Piece> opponentPieces = new ArrayList<>();
 
     // this is the tile you want to move from
     private Tile start;
@@ -34,8 +40,24 @@ public class Game
     // this is the tile you want to move to
     private Tile end;
 
+    private static Paint black = new Paint();
+
+    private static Paint red = new Paint();
+
+    // set the color of the opponent painter
+    private static Paint opponent = new Paint();
+
+    // set the color of the player painter
+    private static Paint player = new Paint();
+
+    // the opponent in the game
+    private AI ai;
+
+    // media player used to play a clicking sound when you move
+    static MediaPlayer mp;
+
     //private constructor to avoid client applications to use constructor
-    private Game(Context context)
+    public Game(Context context)
     {
         this.context = context;
     }
@@ -51,6 +73,11 @@ public class Game
         if (instance == null)
         {
             instance = new Game(context);
+            black.setColor(Color.BLACK);
+            red.setColor(Color.RED);
+            opponent.setColor(Color.rgb(0, 0, 500));
+            player.setColor(Color.rgb(255, 165, 0));
+            mp = MediaPlayer.create(context, R.raw.move);
         }
 
         return instance;
@@ -96,13 +123,216 @@ public class Game
     }
 
     /**
+     * method that returns the tile tapped on
+     * if it is a valid tile
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public Tile findTappedTile(float x, float y)
+    {
+        Tile t;
+        for (int i = 0; i < tiles.size(); i ++)
+        {
+            t = tiles.get(i);
+            RectF r = new RectF(t.getLeft(), t.getTop(), t.getRight(), t.getBottom());
+
+            if (r.contains(x, y))
+            {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * This method checks to see if you first tapped a valid tile.
+     * If you did, then it checks to see if that tile has a piece on it
+     * and if it does then it saves that tile as your first then waits
+     * for you to tap a tile without a piece to be saved as the second tile
+     *
+     * @param touchX
+     * @param touchY
+     */
+    public void move(float touchX, float touchY)
+    {
+        Tile t = findTappedTile(touchX, touchY);
+
+        if (t != null && t.hasPiece(playerPieces) && start == null)
+        {
+            start = t;
+            mp.start();
+        }
+        else if (t != null && t.isEmpty(playerPieces, opponentPieces) && start != null)
+        {
+            end = t;
+            attemptMove();
+            start = null;
+            end = null;
+        }
+        else // if you tapped an invalid move space
+        {
+            end = null;
+            start = null;
+        }
+    }
+
+    public void attemptMove()
+    {
+        float x = end.getLeft() + (size/2);
+        float y = end.getTop()+ (size/2);
+
+        // if end is a neighbor of start
+        if (start.isNeighbor(end))
+        {
+            if (start.getPiece(playerPieces).isKing() && canMoveKing(start, end))
+            {
+                start.getPiece(playerPieces).setXY(x, y);
+                mp.start();
+            }
+            else if (canMoveNonKing(start, end))
+            {
+                start.getPiece(playerPieces).setXY(x, y);
+                mp.start();
+            }
+        }
+    }
+
+    // NOTE: THESE TWO WILL HAVE TO CHANGE WHEN THE AI IS IMPLEMENTED
+    public boolean canMoveNonKing(Tile start, Tile end)
+    {
+        return (end.getLeft() < start.getLeft() && end.getTop() < start.getTop()) ||
+                (end.getRight() > start.getRight() && end.getTop() < start.getTop());
+    }
+
+    public boolean canMoveKing(Tile start, Tile end)
+    {
+        return (end.getLeft() < start.getLeft() && end.getBottom() > start.getBottom()) ||
+                (end.getRight() > start.getRight() && end.getBottom() > start.getBottom());
+    }
+
+    /**
+     * method that creates all the tiles and pieces
+     * for both players
+     */
+    public void generateAssets()
+    {
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                // bounds of the tiles
+                float left = row * size;
+                float top = col * size;
+                float right = left + size;
+                float bottom = top + size;
+
+                if ((row + col) % 2 == 0)
+                {
+                    float circleX = left + size / 2;
+                    float circleY = top + size / 2;
+
+                    addTile(new Tile(left, top, right, bottom, black));
+
+                    // top 3 rows are where the opponent starts
+                    if (col < 3)
+                    {
+                        addOpponent(new Piece(circleX, circleY, opponent));
+                    } // bottom 3 rows are where the player starts
+                    else if (col > 4)
+                    {
+                        addPlayer(new Piece(circleX, circleY, player));
+                    }
+                }
+                else
+                {
+                    // invalid tiles that are just used for drawing
+                    addInvalidTile(new Tile(left, top, right, bottom, red));
+                }
+            }
+        }
+
+        ai = new AI(opponentPieces);
+    }
+
+    /**
+     * This method assigns the proper neighbors
+     * to each tile so that you can move legally
+     */
+    public void asignNeighbors()
+    {
+        // boolean to tell which number set to use
+        boolean shiftedDown = false;
+
+        for (int i = 1; i < tiles.size(); i ++)
+        {
+            if (!shiftedDown)
+            {
+                if (i % 4 == 0)
+                {
+                    shiftedDown = true;
+                }
+
+                if (i - 5 >= 0)
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i - 5));
+                }
+
+                if (i - 4 >= 0)
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i - 4));
+                }
+
+                if (i + 3 < tiles.size())
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i + 3));
+                }
+
+                if (i + 4 < tiles.size())
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i + 4));
+                }
+            }
+            else if (shiftedDown)
+            {
+                if (i % 4 == 0)
+                {
+                    shiftedDown = false;
+                }
+
+                if (i - 4 >= 0)
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i - 4));
+                }
+
+                if (i - 3 >= 0)
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i-3));
+                }
+
+                if (i + 4 < tiles.size())
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i + 4));
+                }
+
+                if (i + 5 < tiles.size())
+                {
+                    tiles.get(i).addNeighbor(tiles.get(i + 5));
+                }
+            }
+        }
+    }
+
+    /**
      * used to add opponents to the array
      *
      * @param p
      */
     public void addOpponent(Piece p)
     {
-        opponentPiececs.add(p);
+        opponentPieces.add(p);
     }
 
     /**
@@ -153,85 +383,58 @@ public class Game
      */
     public ArrayList<Piece> getOpponentPieces()
     {
-        return opponentPiececs;
+        return opponentPieces;
     }
 
     /**
-     * method that returns the tile tapped on
-     * if it is a valid tile
+     * Returns the opponent of the player
      *
-     * @param x
-     * @param y
      * @return
      */
-    public Tile findTappedTile(float x, float y)
+    public AI getAI()
     {
-        Tile t;
-        for (int i = 0; i < tiles.size(); i ++)
-        {
-            t = tiles.get(i);
-            RectF r = new RectF(t.getLeft(), t.getTop(), t.getRight(), t.getBottom());
-
-            if (r.contains(x, y))
-            {
-                System.out.println(t.getID());
-                return t;
-            }
-        }
-
-        return null;
+        return ai;
     }
 
     /**
-     * This method checks to see if you first tapped a valid tile.
-     * If you did, then it checks to see if that tile has a piece on it
-     * and if it does then it saves that tile as your first then waits
-     * for you to tap a tile without a piece to be saved as the second tile
+     * Returns the black paint element
      *
-     * @param touchX
-     * @param touchY
+     * @return
      */
-    public void move(float touchX, float touchY)
+    public static Paint getBlack()
     {
-        Tile t = findTappedTile(touchX, touchY);
-
-        if (t != null && t.hasPiece(playerPieces) && start == null)
-        {
-            start = t;
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX");
-        }
-        else if (t != null && t.isEmpty(playerPieces, opponentPiececs) && start != null)
-        {
-            end = t;
-            System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYY");
-            attemptMove();
-            start = null;
-            end = null;
-        }
+        return black;
     }
 
-    public void attemptMove()
+    /**
+     * returns the red paint element
+     *
+     * @return
+     */
+    public static Paint getRed()
     {
-        float x = end.getLeft() + (MainActivity.size/2);
-        float y = end.getTop()+ (MainActivity.size/2);
+        return red;
+    }
 
-        // if end is a neighbor of start
-        if (start.isNeighbor(end))
-        {
-            if (end.getID() > start.getID() && start.getPiece(playerPieces).isKing())
-            {
-                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED KING");
-                start.getPiece(playerPieces).setXY(x, y);
-            }
-            else if (end.getID() < start.getID())
-            {
-                Log.d("MMMMMMMMMMMMMMMMMMMM", "MOVED NON-KING");
-                start.getPiece(playerPieces).setXY(x, y);
-            }
-        }
-        else if (!start.isNeighbor(end))
-        {
-            Log.d("NNNNNNNNNNNNNNNNNNNNNNN", "NOT A NEIGHBOR");
-        }
+    /**
+     * Returns the opponent (blue)
+     * paint element
+     *
+     * @return
+     */
+    public static Paint getOpponent()
+    {
+        return opponent;
+    }
+
+    /**
+     * Returns the player (orange)
+     * paint element
+     *
+     * @return
+     */
+    public static Paint getPlayer()
+    {
+        return player;
     }
 }

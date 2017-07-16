@@ -9,22 +9,28 @@ import java.util.ArrayList;
  * Created by Alex on 12/28/16.
  *
  * Tile Class
+ *
+ * A tile is defined as a space you are allowed to move
+ * onto whether you are moving or jumping. Every tile
+ * knows who its neighbors are as well as jump neighbors.
+ * Each tile also contains a left, top, right, and bottom
+ * coordinate which is used when determining where to draw
+ * the tile and if it contains a piece.
  */
 
 public class Tile
 {
-    public ArrayList<Tile> Neighbors = new ArrayList<>();
+    // list of all the neighbors for this tile
+    public ArrayList<Tile> neighbors = new ArrayList<>();
+
+    // list of all jumps this tile can perform
+    public ArrayList<Tile> jumps = new ArrayList<>();
 
     // these are the four points that are used to draw the tile
     private float left, top, right, bottom;
 
-    // the id is the index in the array
-    private int id;
-
     // color of the tile (black or red)
     private Paint color;
-
-    private float [] center;
 
     /**
      * Constructor for the game Tiles
@@ -34,21 +40,11 @@ public class Tile
      * @param right
      * @param bottom
      */
-    public Tile(float left, float top, float right, float bottom, int id, Paint color) {
+    public Tile(float left, float top, float right, float bottom, Paint color) {
         this.left = left;
         this.top = top;
         this.right = right;
         this.bottom = bottom;
-        this.id = id;
-        this.color = color;
-    }
-
-    public Tile(float left, float top, float right, float bottom, float [] center, Paint color) {
-        this.left = left;
-        this.top = top;
-        this.right = right;
-        this.bottom = bottom;
-        this.center = center;
         this.color = color;
     }
 
@@ -61,60 +57,41 @@ public class Tile
         return obj == this;
     }
 
-    public float getLeft() {
-        return left;
-    }
-
-    public float getTop() {
-        return top;
-    }
-
-    public float getRight() {
-        return right;
-    }
-
-    public float getBottom() {
-        return bottom;
-    }
-
-    public Paint getColor()
-    {
-        return color;
-    }
-
     /**
-     * adds a neighbor to the
-     * neighbor array
+     * Determines if this tile has a piece. This
+     * is done by checking to see if getPiece is
+     * null or not
      *
-     * @param tile
+     * @param pieces
+     * @return
      */
-    public void addNeighbor(Tile tile)
-    {
-        Neighbors.add(tile);
-    }
-
-    public ArrayList<Tile> getNeighbors()
-    {
-        return Neighbors;
-    }
-
     public boolean hasPiece(ArrayList<Piece> pieces)
     {
         return getPiece(pieces) != null;
     }
 
+    /**
+     * Returns the piece that this tile holds
+     *
+     * @param pieces
+     * @return
+     */
     public Piece getPiece(ArrayList<Piece> pieces)
     {
+        // create a temp rectF with this tiles coords
         RectF r = new RectF(this.left, this.top, this.right, this.bottom);
 
+        // then go through and find  which piece resides on this tile
         for (int i = 0; i < pieces.size(); i ++)
         {
             if (r.contains(pieces.get(i).getX(), pieces.get(i).getY()))
             {
+                // return that piece
                 return pieces.get(i);
             }
         }
 
+        // no piece was found
         return null;
     }
 
@@ -126,9 +103,11 @@ public class Tile
      */
     public boolean isNeighbor(Tile end)
     {
+        // go through all the available neighbors
         for (int i = 0; i < getNeighbors().size(); i ++)
         {
-            if (end.equals(getNeighbors().get(i)))//end.getID() == getNeighbors().get(i).getID())
+            // use the overridden equals method
+            if (end.equals(getNeighbors().get(i)))
             {
                 return true;
             }
@@ -137,18 +116,103 @@ public class Tile
         return false;
     }
 
+    /**
+     * Returns whether this tile is empty (no piece of any kind) or not
+     *
+     * @param player
+     * @param opponent
+     * @return
+     */
     public boolean isEmpty(ArrayList<Piece> player, ArrayList<Piece> opponent)
     {
         return !this.hasPiece(player) && !this.hasPiece(opponent);
     }
 
-    public int getID()
-    {
-        return this.id;
+    /**
+     * Returns the left coordinate of the tile
+     *
+     * @return left
+     */
+    public float getLeft() {
+        return left;
     }
 
-    public void setID(int id)
+    /**
+     * Returns the top coordinate of the tile
+     *
+     * @return top
+     */
+    public float getTop() {
+        return top;
+    }
+
+    /**
+     * Returns the right coordinate of the tile
+     *
+     * @return right
+     */
+    public float getRight() {
+        return right;
+    }
+
+    /**
+     * Returns the bottom coordinate of the tile
+     *
+     * @return bottom
+     */
+    public float getBottom() {
+        return bottom;
+    }
+
+    /**
+     * Returns the paint element associated with this tile.
+     * This is used when invalidating the view to
+     * redraw everything
+     *
+     * @return color
+     */
+    public Paint getColor()
     {
-        this.id = id;
+        return color;
+    }
+
+    /**
+     * adds a neighbor to the neighbor array
+     *
+     * @param tile
+     */
+    public void addNeighbor(Tile tile)
+    {
+        neighbors.add(tile);
+    }
+
+    /**
+     * Returns the neighbors of this tile
+     *
+     * @return neighbors
+     */
+    public ArrayList<Tile> getNeighbors()
+    {
+        return neighbors;
+    }
+
+    /**
+     * Adds a neighbor this tile can jump to
+     *
+     * @param tile
+     */
+    public void addJump(Tile tile)
+    {
+        jumps.add(tile);
+    }
+
+    /**
+     * Returns the array of performable jumps
+     *
+     * @return jumps
+     */
+    public ArrayList<Tile> getJumps()
+    {
+        return jumps;
     }
 }
