@@ -190,11 +190,15 @@ public class Game
             if (start.getPiece(playerPieces).isKing() && canMoveKing(start, end))
             {
                 start.getPiece(playerPieces).setXY(x, y);
+
+                // play the wooden click sound
                 mp.start();
             }
             else if (canMoveNonKing(start, end))
             {
                 start.getPiece(playerPieces).setXY(x, y);
+
+                // play the wooden click sound
                 mp.start();
             }
         }
@@ -266,6 +270,8 @@ public class Game
         // boolean to tell which number set to use
         boolean shiftedDown = false;
 
+        tiles.get(0).addNeighbor(tiles.get(4));
+
         for (int i = 1; i < tiles.size(); i ++)
         {
             if (!shiftedDown)
@@ -321,6 +327,32 @@ public class Game
                 {
                     tiles.get(i).addNeighbor(tiles.get(i + 5));
                 }
+            }
+        }
+    }
+
+    public void assignJumps()
+    {
+        for (int i = 0; i < tiles.size(); i ++)
+        {
+            if (i - 9 >= 0)
+            {
+                tiles.get(i).addJump(tiles.get(i - 9));
+            }
+
+            if (i - 7 >= 0)
+            {
+                tiles.get(i).addJump(tiles.get(i - 7));
+            }
+
+            if (i + 7 < tiles.size())
+            {
+                tiles.get(i).addJump(tiles.get(i + 7));
+            }
+
+            if (i + 9 < tiles.size())
+            {
+                tiles.get(i).addJump(tiles.get(i + 9));
             }
         }
     }

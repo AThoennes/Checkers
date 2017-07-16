@@ -49,8 +49,8 @@ public class AI
         Piece p = pieces.get(pieceNum);
 
         Tile start = game.findTappedTile(p.getX(), p.getY());
-//        int tileNum = rand.nextInt(start.getNeighbors().size());
-//        Tile end = start.getNeighbors().get(tileNum);
+        int tileNum = rand.nextInt(start.getNeighbors().size());
+        Tile end = start.getNeighbors().get(tileNum);
 
 
         //while (end.is)

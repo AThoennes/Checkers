@@ -32,5 +32,6 @@ public class MainActivity extends AppCompatActivity
 
         // assign the links each tile has
         game.asignNeighbors();
+        game.assignJumps();
     }
 }
