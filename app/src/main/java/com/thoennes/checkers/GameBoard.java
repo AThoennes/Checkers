@@ -52,7 +52,6 @@ public class GameBoard extends View
     public boolean onTouchEvent(MotionEvent event)
     {
         Game.getGameInstance().move(event.getX(), event.getY());
-        Game.getGameInstance().getAI().move();
         invalidate();
         return super.onTouchEvent(event);
     }
@@ -140,7 +139,7 @@ public class GameBoard extends View
         }
         else if (col > 4)
         {
-            canvas.drawCircle(x, y, radius, Game.getGameInstance().getPlayer());
+            canvas.drawCircle(x, y, radius, Game.getGameInstance().getPlayerColor());
         }
     }
 }

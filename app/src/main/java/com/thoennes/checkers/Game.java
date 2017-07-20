@@ -48,10 +48,12 @@ public class Game
     private static Paint opponent = new Paint();
 
     // set the color of the player painter
-    private static Paint player = new Paint();
+    private static Paint playerColor = new Paint();
 
     // the opponent in the game
     private AI ai;
+
+    private Player player;
 
     // media player used to play a clicking sound when you move
     static MediaPlayer mp;
@@ -76,7 +78,7 @@ public class Game
             black.setColor(Color.BLACK);
             red.setColor(Color.RED);
             opponent.setColor(Color.rgb(0, 0, 500));
-            player.setColor(Color.rgb(255, 165, 0));
+            playerColor.setColor(Color.rgb(255, 165, 0));
             mp = MediaPlayer.create(context, R.raw.move);
         }
 
@@ -148,78 +150,20 @@ public class Game
     }
 
     /**
-     * This method checks to see if you first tapped a valid tile.
-     * If you did, then it checks to see if that tile has a piece on it
-     * and if it does then it saves that tile as your first then waits
-     * for you to tap a tile without a piece to be saved as the second tile
+     * Called when you tap the screen. This handles moving
+     * the player and the opponent
      *
      * @param touchX
      * @param touchY
      */
     public void move(float touchX, float touchY)
     {
-        Tile t = findTappedTile(touchX, touchY);
-
-        if (t != null && t.hasPiece(playerPieces) && start == null)
-        {
-            start = t;
-            mp.start();
-        }
-        else if (t != null && t.isEmpty(playerPieces, opponentPieces) && start != null)
-        {
-            end = t;
-            attemptMove();
-            start = null;
-            end = null;
-        }
-        else // if you tapped an invalid move space
-        {
-            end = null;
-            start = null;
-        }
-    }
-
-    public void attemptMove()
-    {
-        float x = end.getLeft() + (size/2);
-        float y = end.getTop()+ (size/2);
-
-        // if end is a neighbor of start
-        if (start.isNeighbor(end))
-        {
-            if (start.getPiece(playerPieces).isKing() && canMoveKing(start, end))
-            {
-                start.getPiece(playerPieces).setXY(x, y);
-
-                // play the wooden click sound
-                mp.start();
-            }
-            else if (canMoveNonKing(start, end))
-            {
-                start.getPiece(playerPieces).setXY(x, y);
-
-                // play the wooden click sound
-                mp.start();
-            }
-        }
-    }
-
-    // NOTE: THESE TWO WILL HAVE TO CHANGE WHEN THE AI IS IMPLEMENTED
-    public boolean canMoveNonKing(Tile start, Tile end)
-    {
-        return (end.getLeft() < start.getLeft() && end.getTop() < start.getTop()) ||
-                (end.getRight() > start.getRight() && end.getTop() < start.getTop());
-    }
-
-    public boolean canMoveKing(Tile start, Tile end)
-    {
-        return (end.getLeft() < start.getLeft() && end.getBottom() > start.getBottom()) ||
-                (end.getRight() > start.getRight() && end.getBottom() > start.getBottom());
+        player.attemptMove(touchX, touchY);
     }
 
     /**
      * method that creates all the tiles and pieces
-     * for both players
+     * that will be used in the game
      */
     public void generateAssets()
     {
@@ -228,26 +172,29 @@ public class Game
             for (int col = 0; col < 8; col++)
             {
                 // bounds of the tiles
-                float left = row * size;
-                float top = col * size;
-                float right = left + size;
-                float bottom = top + size;
+                float left = row * size; // left side of the tile
+                float top = col * size; // top of the tile
+                float right = left + size; // right side of the tile
+                float bottom = top + size; // bottom of the tile
 
                 if ((row + col) % 2 == 0)
                 {
                     float circleX = left + size / 2;
                     float circleY = top + size / 2;
 
+                    // add the tile to the list of playable tiles (colored black)
                     addTile(new Tile(left, top, right, bottom, black));
 
                     // top 3 rows are where the opponent starts
                     if (col < 3)
                     {
+                        // add the opponent piece to the list
                         addOpponent(new Piece(circleX, circleY, opponent));
                     } // bottom 3 rows are where the player starts
                     else if (col > 4)
                     {
-                        addPlayer(new Piece(circleX, circleY, player));
+                        // add the player piece to the list
+                        addPlayer(new Piece(circleX, circleY, playerColor));
                     }
                 }
                 else
@@ -258,7 +205,11 @@ public class Game
             }
         }
 
+        // create a new opponent
         ai = new AI(opponentPieces);
+
+        // create a new player
+        player = new Player(playerPieces);
     }
 
     /**
@@ -268,9 +219,9 @@ public class Game
     public void asignNeighbors()
     {
         // boolean to tell which number set to use
-        boolean shiftedDown = false;
+        /*boolean shiftedDown = false;
 
-        tiles.get(0).addNeighbor(tiles.get(4));
+        tiles.get(0).addNeighbor(tiles.get(3));
 
         for (int i = 1; i < tiles.size(); i ++)
         {
@@ -279,6 +230,14 @@ public class Game
                 if (i % 4 == 0)
                 {
                     shiftedDown = true;
+
+                    if (i == 8 || i == 16 || i == 24)
+                    {
+                        tiles.get(i).addNeighbor(tiles.get(i - 4));
+                        tiles.get(i).addNeighbor(tiles.get(i + 4));
+                    }
+
+                    continue;
                 }
 
                 if (i - 5 >= 0)
@@ -328,9 +287,144 @@ public class Game
                     tiles.get(i).addNeighbor(tiles.get(i + 5));
                 }
             }
-        }
+            System.out.println(shiftedDown);
+        }*/
+
+        getTiles().get(0).addNeighbor(getTiles().get(4));
+
+        getTiles().get(1).addNeighbor(getTiles().get(4));
+        getTiles().get(1).addNeighbor(getTiles().get(5));
+
+        getTiles().get(2).addNeighbor(getTiles().get(5));
+        getTiles().get(2).addNeighbor(getTiles().get(6));
+
+        getTiles().get(3).addNeighbor(getTiles().get(6));
+        getTiles().get(3).addNeighbor(getTiles().get(7));
+
+        getTiles().get(4).addNeighbor(getTiles().get(0));
+        getTiles().get(4).addNeighbor(getTiles().get(1));
+        getTiles().get(4).addNeighbor(getTiles().get(8));
+        getTiles().get(4).addNeighbor(getTiles().get(9));
+
+        getTiles().get(5).addNeighbor(getTiles().get(1));
+        getTiles().get(5).addNeighbor(getTiles().get(2));
+        getTiles().get(5).addNeighbor(getTiles().get(9));
+        getTiles().get(5).addNeighbor(getTiles().get(10));
+
+        getTiles().get(6).addNeighbor(getTiles().get(2));
+        getTiles().get(6).addNeighbor(getTiles().get(3));
+        getTiles().get(6).addNeighbor(getTiles().get(1));
+        getTiles().get(6).addNeighbor(getTiles().get(11));
+
+        getTiles().get(7).addNeighbor(getTiles().get(3));
+        getTiles().get(7).addNeighbor(getTiles().get(11));
+
+        getTiles().get(8).addNeighbor(getTiles().get(4));
+        getTiles().get(8).addNeighbor(getTiles().get(12));
+
+        getTiles().get(9).addNeighbor(getTiles().get(4));
+        getTiles().get(9).addNeighbor(getTiles().get(5));
+        getTiles().get(9).addNeighbor(getTiles().get(12));
+        getTiles().get(9).addNeighbor(getTiles().get(13));
+
+        getTiles().get(10).addNeighbor(getTiles().get(5));
+        getTiles().get(10).addNeighbor(getTiles().get(6));
+        getTiles().get(10).addNeighbor(getTiles().get(13));
+        getTiles().get(10).addNeighbor(getTiles().get(14));
+
+        getTiles().get(11).addNeighbor(getTiles().get(6));
+        getTiles().get(11).addNeighbor(getTiles().get(7));
+        getTiles().get(11).addNeighbor(getTiles().get(11));
+        getTiles().get(11).addNeighbor(getTiles().get(15));
+
+        getTiles().get(12).addNeighbor(getTiles().get(8));
+        getTiles().get(12).addNeighbor(getTiles().get(9));
+        getTiles().get(12).addNeighbor(getTiles().get(16));
+        getTiles().get(12).addNeighbor(getTiles().get(17));
+
+        getTiles().get(13).addNeighbor(getTiles().get(9));
+        getTiles().get(13).addNeighbor(getTiles().get(10));
+        getTiles().get(13).addNeighbor(getTiles().get(17));
+        getTiles().get(13).addNeighbor(getTiles().get(18));
+
+        getTiles().get(14).addNeighbor(getTiles().get(10));
+        getTiles().get(14).addNeighbor(getTiles().get(11));
+        getTiles().get(14).addNeighbor(getTiles().get(18));
+        getTiles().get(14).addNeighbor(getTiles().get(19));
+
+        getTiles().get(15).addNeighbor(getTiles().get(11));
+        getTiles().get(15).addNeighbor(getTiles().get(19));
+
+        getTiles().get(16).addNeighbor(getTiles().get(12));
+        getTiles().get(16).addNeighbor(getTiles().get(20));
+
+        getTiles().get(17).addNeighbor(getTiles().get(12));
+        getTiles().get(17).addNeighbor(getTiles().get(13));
+        getTiles().get(17).addNeighbor(getTiles().get(20));
+        getTiles().get(17).addNeighbor(getTiles().get(21));
+
+        getTiles().get(18).addNeighbor(getTiles().get(13));
+        getTiles().get(18).addNeighbor(getTiles().get(14));
+        getTiles().get(18).addNeighbor(getTiles().get(21));
+        getTiles().get(18).addNeighbor(getTiles().get(22));
+
+        getTiles().get(19).addNeighbor(getTiles().get(14));
+        getTiles().get(19).addNeighbor(getTiles().get(15));
+        getTiles().get(19).addNeighbor(getTiles().get(22));
+        getTiles().get(19).addNeighbor(getTiles().get(23));
+
+        getTiles().get(20).addNeighbor(getTiles().get(16));
+        getTiles().get(20).addNeighbor(getTiles().get(17));
+        getTiles().get(20).addNeighbor(getTiles().get(24));
+        getTiles().get(20).addNeighbor(getTiles().get(25));
+
+        getTiles().get(21).addNeighbor(getTiles().get(17));
+        getTiles().get(21).addNeighbor(getTiles().get(18));
+        getTiles().get(21).addNeighbor(getTiles().get(25));
+        getTiles().get(21).addNeighbor(getTiles().get(26));
+
+        getTiles().get(22).addNeighbor(getTiles().get(18));
+        getTiles().get(22).addNeighbor(getTiles().get(19));
+        getTiles().get(22).addNeighbor(getTiles().get(26));
+        getTiles().get(22).addNeighbor(getTiles().get(27));
+
+        getTiles().get(23).addNeighbor(getTiles().get(19));
+        getTiles().get(23).addNeighbor(getTiles().get(27));
+
+        getTiles().get(24).addNeighbor(getTiles().get(20));
+        getTiles().get(24).addNeighbor(getTiles().get(28));
+
+        getTiles().get(25).addNeighbor(getTiles().get(20));
+        getTiles().get(25).addNeighbor(getTiles().get(21));
+        getTiles().get(25).addNeighbor(getTiles().get(28));
+        getTiles().get(25).addNeighbor(getTiles().get(29));
+
+        getTiles().get(26).addNeighbor(getTiles().get(21));
+        getTiles().get(26).addNeighbor(getTiles().get(22));
+        getTiles().get(26).addNeighbor(getTiles().get(29));
+        getTiles().get(26).addNeighbor(getTiles().get(30));
+
+        getTiles().get(27).addNeighbor(getTiles().get(22));
+        getTiles().get(27).addNeighbor(getTiles().get(23));
+        getTiles().get(27).addNeighbor(getTiles().get(30));
+        getTiles().get(27).addNeighbor(getTiles().get(31));
+
+        getTiles().get(28).addNeighbor(getTiles().get(24));
+        getTiles().get(28).addNeighbor(getTiles().get(25));
+
+        getTiles().get(29).addNeighbor(getTiles().get(25));
+        getTiles().get(29).addNeighbor(getTiles().get(26));
+
+        getTiles().get(30).addNeighbor(getTiles().get(26));
+        getTiles().get(30).addNeighbor(getTiles().get(27));
+
+        getTiles().get(31).addNeighbor(getTiles().get(27));
     }
 
+    /**
+     * Assigns the jumpable tiles for every tile in the game
+     *
+     */
     public void assignJumps()
     {
         for (int i = 0; i < tiles.size(); i ++)
@@ -429,6 +523,16 @@ public class Game
     }
 
     /**
+     * Returns the player object in this game
+     *
+     * @return
+     */
+    public Player getPlayer()
+    {
+        return player;
+    }
+
+    /**
      * Returns the black paint element
      *
      * @return
@@ -465,8 +569,8 @@ public class Game
      *
      * @return
      */
-    public static Paint getPlayer()
+    public static Paint getPlayerColor()
     {
-        return player;
+        return playerColor;
     }
 }
