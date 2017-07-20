@@ -2,8 +2,6 @@ package com.thoennes.checkers;
 
 import java.util.ArrayList;
 
-import static com.thoennes.checkers.Game.getGameInstance;
-import static com.thoennes.checkers.Game.mp;
 import static com.thoennes.checkers.MainActivity.size;
 
 /**
@@ -45,7 +43,7 @@ public class Player
         if (t != null && t.hasPiece(game.getPlayerPieces()) && start == null)
         {
             start = t;
-            mp.start();
+            game.getMp().start();
         }
         else if (t != null && t.isEmpty(game.getPlayerPieces(), game.getOpponentPieces()) && start != null)
         {
@@ -63,6 +61,7 @@ public class Player
 
     public void move()
     {
+        Game game = Game.getGameInstance();
         float x = end.getLeft() + (size/2);
         float y = end.getTop()+ (size/2);
 
@@ -75,18 +74,18 @@ public class Player
                 start.getPiece(pieces).setXY(x, y);
 
                 // play the wooden click sound
-                mp.start();
+                game.getMp().start();
 
-                getGameInstance().getAI().attemptMove();
+                game.getAI().attemptMove();
             } // moving a non-king
             else if (canMoveNonKing(start, end))
             {
                 start.getPiece(pieces).setXY(x, y);
 
                 // play the wooden click sound
-                mp.start();
+                game.getMp().start();
 
-                getGameInstance().getAI().attemptMove();
+                game.getAI().attemptMove();
             }
         }
     }

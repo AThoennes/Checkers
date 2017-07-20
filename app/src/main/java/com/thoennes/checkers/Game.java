@@ -34,12 +34,6 @@ public class Game
     // array list of all the opponent pieces
     private ArrayList<Piece> opponentPieces = new ArrayList<>();
 
-    // this is the tile you want to move from
-    private Tile start;
-
-    // this is the tile you want to move to
-    private Tile end;
-
     private static Paint black = new Paint();
 
     private static Paint red = new Paint();
@@ -56,7 +50,7 @@ public class Game
     private Player player;
 
     // media player used to play a clicking sound when you move
-    static MediaPlayer mp;
+    private static MediaPlayer mp;
 
     //private constructor to avoid client applications to use constructor
     public Game(Context context)
@@ -537,7 +531,7 @@ public class Game
      *
      * @return
      */
-    public static Paint getBlack()
+    public Paint getBlack()
     {
         return black;
     }
@@ -547,7 +541,7 @@ public class Game
      *
      * @return
      */
-    public static Paint getRed()
+    public Paint getRed()
     {
         return red;
     }
@@ -558,7 +552,7 @@ public class Game
      *
      * @return
      */
-    public static Paint getOpponent()
+    public Paint getOpponent()
     {
         return opponent;
     }
@@ -569,8 +563,13 @@ public class Game
      *
      * @return
      */
-    public static Paint getPlayerColor()
+    public Paint getPlayerColor()
     {
         return playerColor;
+    }
+
+    public MediaPlayer getMp()
+    {
+        return mp;
     }
 }
